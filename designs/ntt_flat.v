@@ -1,4 +1,11 @@
 `timescale 1ns / 1ps
+
+//`include "counter.v"
+//`include "mux.v"
+//`include "master_slave_dff.v"
+//`include "demux.v"
+//`include "psi_table.v"
+//`include "ntt_pe.v"
 //////////////////////////////////////////////////////////////////////////////////
 // Company: 
 // Engineer: 
@@ -64,7 +71,7 @@ module ntt_flat #(parameter N = 17, D = 8) (
         master_slave_dff #(.N(N)) msdff(
             .clk(clk), 
             .rst(0), 
-            .d(count_q == $clog2(D) ? a[N*(i+1)-1:N*i] : reg_in[i]), 
+            .d(count_q == {$clog2($clog2(D)){1'B1}} ? a[N*(i+1)-1:N*i] : reg_in[i]), 
             .q(reg_out[i])
             );
         demux #(.N(N), .S($clog2(D))) dem(
@@ -89,7 +96,7 @@ module ntt_flat #(parameter N = 17, D = 8) (
             .s(reg_in[i])
             );
             
-        assign b_temp[N*(i+1)-1:N*i] = reg_in[i];
+        assign b[N*(i+1)-1:N*i] = reg_in[i];
     end
     endgenerate
 endmodule

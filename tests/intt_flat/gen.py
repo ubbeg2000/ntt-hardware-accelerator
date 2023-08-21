@@ -1,17 +1,9 @@
-from math import log2, ceil
+from math import ceil, log2
+from random import randint
 
-w = [
-    [241],
-    [64, 4],
-    [249, 128, 2, 225]
-]
-
-winv = [
-    [16],
-    [253, 193],
-    [32, 255, 129, 8],
-]
-
+N = 17
+D = 16
+Q = 65537
 
 def gcd(a, b):
     while b != 0:
@@ -30,9 +22,6 @@ def find_nth_root_of_unity_mod_q(n, q):
 def find_2nth_rou(q, n):
     for i in range(2, q):
         if pow(i, 2*n, q) == 1 and gcd(i, q) == 1:
-            # for j in range(n):
-            #     if pow(i, j, q) == 1:
-            #         continue
             return i
 
     return None
@@ -43,20 +32,10 @@ def gen_w_table(q, n):
     psi = find_2nth_rou(q, n)
     for i in range(int(log2(n))):
         for j in range(2 ** i):
-            # w_table[i] = [pow(psi, n//(2 ** (i + 1)) +
-            #                   j * n//2, q)] + w_table[i]
             p = n//(2 ** (i + 1)) + j * n//2
             while p > n:
                 p -= (n - 2)
             w_table[i] = w_table[i] + [pow(psi, p, q)]
-            # w_table[i].append(pow(psi, n//(2 ** (i + 1)) + j * n//2, q))
-
-    print("w_table")
-    for i in range(len(w_table)):
-        for j in range(len(w_table[i])):
-            print(f"psi_table[{i}][{j}] = {w_table[i][j]};")
-    print("")
-    generate_psi_table(n, q, w_table)
 
     return w_table
 
@@ -67,20 +46,10 @@ def gen_w_inv_table(q, n):
     # print(psi)
     for i in range(int(log2(n))):
         for j in range(2 ** i):
-            # w_inv_table[i] = [pow(psi, n//(2 ** (i + 1)) +
-            #                   j * n//2, q)] + w_inv_table[i]
             p = n//(2 ** (i + 1)) + j * n//2
             while p > n:
                 p -= (n - 2)
             w_inv_table[i] = w_inv_table[i] + [pow(psi, -p, q)]
-            # w_inv_table[i].append(pow(psi, n//(2 ** (i + 1)) + j * n//2, q))
-
-    print("w_inv_table")
-    for i in range(len(w_inv_table)):
-        for j in range(len(w_inv_table[i])):
-            print(f"psi_table[{i}][{j}] = {w_inv_table[i][j]};")
-
-    generate_psi_table(n, q, w_inv_table, "psi_inv_table")
 
     return w_inv_table
 
@@ -89,9 +58,7 @@ def ntt(a, q):
     n = len(a)
     res = [a[i] for i in range(n)]
     w_table = gen_w_table(q, n)
-    # print(res)
     for i in range(int(log2(n))):
-        # print(f"STAGE {i + 1}")
         for j in range(2**(i)):
             for k in range(n // (2 ** (i + 1))):
                 a_idx = j * n // (2 ** (i)) + k
@@ -105,9 +72,7 @@ def ntt(a, q):
                 res[a_idx] = b0 % q
                 res[a_idx + jump] = b1 % q
 
-                # print(i, j, k, a_idx, W)
-        print(res)
-
+        # print(res)
     return res
 
 
@@ -115,9 +80,7 @@ def ntt_radix_4(a, q):
     n = len(a)
     res = [a[i] for i in range(n)]
     w_table = gen_w_table(q, n)
-    # print(res)
     for i in range(int(log2(n)/2)):
-        # print(f"STAGE {i + 1}")
         for j in range(2**(i)):
             for k in range(n // (2 ** (i + 1))):
                 a_idx = j * n // (2 ** (i)) + k
@@ -130,9 +93,6 @@ def ntt_radix_4(a, q):
 
                 res[a_idx] = b0 % q
                 res[a_idx + jump] = b1 % q
-
-                # print(i, j, k, a_idx, W)
-        # print(res)
 
     return res
 
@@ -143,7 +103,6 @@ def intt(a, q):
     w_inv_table = gen_w_inv_table(q, n)
     # print(res)
     for i in range(int(log2(n)) - 1, -1, -1):
-        # print(f"STAGE {i + 1}")
         for j in range(2**(i)):
             for k in range(n // (2 ** (i + 1))):
                 a_idx = j * n // (2 ** (i)) + k
@@ -157,51 +116,33 @@ def intt(a, q):
                 res[a_idx] = b0 % q
                 res[a_idx + jump] = b1 % q
 
-                # print(i, j, k, a_idx, a_idx + jump, W)
-        print(res)
+                print(res[a_idx], res[a_idx + jump], W)
 
     res = [(r * pow(n, -1, q)) % q for r in res]
 
     return res
 
+def arr_to_bin_str(arr):
+    a_bin_str = ""
+    for d in arr:
+        a_bin_str = "{0:b}".format(d).rjust(N, "0") + a_bin_str
+    return a_bin_str
 
-def int_to_bin(number, length):
-    binary_string = bin(number)[2:].zfill(length)
-    return binary_string
+rand_arr = [randint(0, Q-1) for i in range(D)]
 
+input_file = open("./tests/intt_flat/expected.txt", "w")
+input_file.write(f"{arr_to_bin_str([1 for i in range(D)])}\n")
+input_file.write(f"{arr_to_bin_str(rand_arr)}\n")
+input_file.write(f"{arr_to_bin_str([i+1 for i in range(D)])}\n")
+input_file.write(f"{arr_to_bin_str([D-i for i in range(D)])}\n")
+input_file.close()
 
-def generate_psi_table(n, q, table, name="psi_table"):
-    psi = [t for sub in table for t in sub]
-    psi = [1] + psi
-    f = open(f"{name}.v", "w")
-    f.write("`timescale 1ps/1ns\n\n")
+output_file = open("./tests/intt_flat/testcase.txt", "w")
+output_file.write(f"{arr_to_bin_str(ntt([1 for i in range(D)], Q))}\n")
+output_file.write(f"{arr_to_bin_str(ntt(rand_arr, Q))}\n")
+output_file.write(f"{arr_to_bin_str(ntt([i+1 for i in range(D)], Q))}\n")
+output_file.write(f"{arr_to_bin_str(ntt([D-i for i in range(D)], Q))}\n")
+output_file.close()
 
-    f.write(f"module {name} (\n")
-    f.write(f"    input [{ceil(log2(n))-1}:0] addr,\n")
-    f.write(f"    output reg [{ceil(log2(q))-1}:0] value\n")
-    f.write("    );\n\n")
-
-    f.write("    always @ (addr) begin\n")
-    f.write("    case (addr)\n")
-    for i in range(0, n):
-        f.write(
-            f"        {ceil(log2(n))}'B{int_to_bin(i, ceil(log2(n)))}: value = {psi[i]};\n")
-    f.write("    endcase\n")
-    f.write("    end\n")
-    f.write("endmodule\n")
-
-
-# print(gen_w_table(257, 8))
-# print(gen_w_inv_table(257, 8))
-print(gen_w_table(65537, 16))
-print(gen_w_inv_table(65537, 16))
-# print(ntt([1  for i in range(32)]))
-# a = ntt([1 for i in range(16)], 65537)
-# b = ntt([1 for i in range(32)], 65537)
-# c = [((a[i] * b[i]) % 65537) for i in range(32)]
-# print(a)
-# print(b)
-# print(c)
-# print("ASDF")
-# print(intt(a, 257))
-# print(intt(a, 65537))
+# print(ntt([1 for i in range(D)], Q))
+print(intt(ntt([1 for i in range(D)], Q), Q))

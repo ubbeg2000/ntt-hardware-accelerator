@@ -1,4 +1,6 @@
 `timescale 1ns / 1ps
+
+// `include "designs/ntt_intt.v"
 //////////////////////////////////////////////////////////////////////////////////
 // Company: 
 // Engineer: 
@@ -21,9 +23,9 @@
 
 
 module ntt_intt_tb();
-    parameter N = 65537, D = 16;
+    parameter N = 17, D = 16;
     
-    reg clk = 0, mode = 1;
+    reg clk = 0, mode = 0;
     wire [D*N-1:0] a;
     wire [D*N-1:0] b;
     wire [N-1:0] bs [D-1:0];
@@ -48,7 +50,16 @@ module ntt_intt_tb();
     end
     endgenerate
     
-    intt_flat #(.N(N), .D(D)) uut(.clk(clk), .a(a), .b(b));
+    ntt_flat #(.N(N), .D(D)) uut(.clk(clk), .a(a), .b(b));
 
     always #(10) clk = ~clk;
+
+    integer j = 0;
+    initial begin
+        $dumpfile("ntt_intt_tb.vcd");
+        $dumpvars(0, ntt_intt_tb);
+        for (j=0;j<D;j=j+1)
+            $dumpvars(1, bs[j]);
+        #(1000) $stop;
+    end
 endmodule

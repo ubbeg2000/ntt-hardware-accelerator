@@ -28,7 +28,7 @@ module poly_add_tb();
     reg [DEG*N-1:0] b = 32'HAA5F;
     wire [DEG*N-1:0] s;
     
-    poly_add #(.DEG(DEG), .N(N)) padd(.a(a), .b(b), .s(s));
+    poly_add #(.D(DEG), .N(N)) padd(.a(a), .b(b), .s(s));
     
     initial #(100) $stop;
 endmodule

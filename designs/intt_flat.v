@@ -20,11 +20,13 @@
 //////////////////////////////////////////////////////////////////////////////////
 
 
-module intt_flat #(parameter N = 17, D = 8) (
+module intt_flat #(parameter N = 17, D = 8, NINV=2) (
     input [D*N-1:0] a,
     input clk,
     output [D*N-1:0] b
     );
+
+    localparam [N-1:0] ninv = NINV;
     
     wor [N-1:0] pe_b [D-1:0];
     wire [D-1:0] sub_mux_out;
@@ -34,7 +36,7 @@ module intt_flat #(parameter N = 17, D = 8) (
     wire [$clog2(D)*D-1:0] sub_mux_in;
     wire [$clog2($clog2(D))-1:0] count_q;
     
-    counter #(.N($clog2($clog2(D)))) stage_counter(.clk(clk), .rst(0), .down(1), .count(count_q));
+    counter_down #(.N($clog2($clog2(D)))) stage_counter(.clk(clk), .rst(0), .down(1), .count(count_q));
     mux #(.N(D), .S($clog2(D))) sub_mux(.a(sub_mux_in), .sel(count_q), .s(sub_mux_out));
     
     genvar i, j;
@@ -67,7 +69,7 @@ module intt_flat #(parameter N = 17, D = 8) (
         master_slave_dff #(.N(N)) msdff(
             .clk(clk), 
             .rst(0), 
-            .d(count_q == 3 ? a[N*(i+1)-1:N*i] : reg_in[i]), 
+            .d(count_q == {$clog2($clog2(D)){1'B0}} ? a[N*(i+1)-1:N*i] : reg_in[i]), 
             .q(reg_out[i])
             );
         demux #(.N(N), .S($clog2(D))) dem(
@@ -85,18 +87,18 @@ module intt_flat #(parameter N = 17, D = 8) (
             .value(c_out)
             );
         intt_pe #(.N(N)) pe(
-            .b(reg_out[i]), 
-            .a(pe_b[i]), 
+            .a(reg_out[i]), 
+            .b(pe_b[i]), 
             .c(c_out),
             .sub(sub_mux_out[i]), 
             .s(reg_in[i])
             );
             
-        assign b[N*(i+1)-1:N*i] = reg_in[i];
+        assign b_temp[N*(i+1)-1:N*i] = reg_in[i];
     end
     endgenerate
     
-//    point_mod_mult #(.N(N), .D(D)) mul(.a(b_temp), .b({D{225}}), .p(b));
+   point_mod_mult #(.N(N), .D(D)) mul(.a(b_temp), .b({D{ninv}}), .p(b));
 endmodule
 
      

@@ -1,4 +1,6 @@
-`timescale 1ns / 1ps
+`timescale 1ns / 1ns
+
+//`include "ntt.v"
 //////////////////////////////////////////////////////////////////////////////////
 // Company: 
 // Engineer: 
@@ -18,7 +20,6 @@
 // Additional Comments:
 // 
 //////////////////////////////////////////////////////////////////////////////////
-
 
 module ntt_tb();
     parameter N = 9;
@@ -42,5 +43,9 @@ module ntt_tb();
     end
     endgenerate
     
-    initial #(100) $stop;
+    initial begin
+        $dumpfile("ntt_tb.vcd");
+        $dumpvars(0, ntt_tb);
+        #(10) $finish;
+    end
 endmodule

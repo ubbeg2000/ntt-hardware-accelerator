@@ -1,11 +1,13 @@
 `timescale 1ns / 1ps
+
+//`include "full_adder.v"
 //////////////////////////////////////////////////////////////////////////////////
 // Company: 
 // Engineer: 
 // 
-// Create Date: 19.07.2023 18:26:19
+// Create Date: 19.07.2023 18:10:34
 // Design Name: 
-// Module Name: multiplier
+// Module Name: adder
 // Project Name: 
 // Target Devices: 
 // Tool Versions: 
@@ -20,26 +22,26 @@
 //////////////////////////////////////////////////////////////////////////////////
 
 
-module multiplier #(parameter N = 1) (
+module adder #(parameter N = 2) (
     input [N-1:0] a,
     input [N-1:0] b,
-    output [2*N-1:0] p
+    input cin,
+    output [N-1:0] s,
+    output cout
     );
+    
+    wire cwire[N-2:0];
     
     genvar i;
     
-    wire [2*N-1:0] adder_out [N-1:0];
-    wire [N-1:0] mux_out [N-1:0];
-    
     generate
     for (i = 0; i < N; i = i + 1) begin
-        mux_2x1 #(.N(N)) mux(.a(0), .b(b), .sel(a[i]), .s(mux_out[i]));
         if (i == 0)
-            adder #(.N(2*N)) add(.a(0), .b({0, mux_out[i]}), .cin(1'B0), .s(adder_out[i]));
+            full_adder fa(.a(a[i]), .b(b[i]), .cin(cin), .s(s[i]), .cout(cwire[i]));
+        else if (i == N - 1)
+            full_adder fa(.a(a[i]), .b(b[i]), .cin(cwire[i - 1]), .s(s[i]), .cout(cout));
         else
-            adder #(.N(2*N)) add(.a({0, adder_out[i-1]}), .b({0, mux_out[i]} << i), .cin(1'B0), .s(adder_out[i]));
+            full_adder fa(.a(a[i]), .b(b[i]), .cin(cwire[i - 1]), .s(s[i]), .cout(cwire[i]));
     end
     endgenerate
-    
-    assign p = adder_out[N-1];
 endmodule

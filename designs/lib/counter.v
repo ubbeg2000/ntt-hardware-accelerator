@@ -42,8 +42,9 @@ module counter #(parameter N = 2) (
 //    end
 //    endgenerate
 //    initial begin
-    reg [N-1:0] state = down ? 0 : 3;
-    always @ (posedge clk) state = state + (down ? -1 : 1);
+    reg [N-1:0] state; 
+    initial state = 32'D0;
+    always @ (posedge clk) state = state + 1;
     always @ (negedge clk) count = state;
 //    end
 endmodule
