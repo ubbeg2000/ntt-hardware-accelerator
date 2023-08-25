@@ -22,11 +22,12 @@
 
 module ntt_intt_flat_poly_mult_tb();
     parameter N = 17, D = 16;
+
     reg [2*N*D-1:0] a;
     wire [N*D-1:0] b1, b2, b3, c;
     wire [N-1:0] cs [D-1:0], as [D-1:0], bs [D-1:0];
 
-    reg clk = 0;
+    reg clk = 1'B0;
 
     integer testcase_file;
     integer actual_file;
@@ -49,8 +50,8 @@ module ntt_intt_flat_poly_mult_tb();
     end
     endgenerate
 
-    ntt_flat #(.N(N), .D(D)) ntt1(.a(a[2*D*N-1:D*N]), .b(b1), .clk(j > D - 2 ? 0 : clk));
-    ntt_flat #(.N(N), .D(D)) ntt2(.a(a[D*N-1:0]), .b(b2), .clk(j > D - 2 ? 0 : clk));
+    ntt_flat #(.N(N), .D(D)) ntt1(.a(a[2*D*N-1:D*N]), .b(b1), .clk(j > D - 2 ? 1'B0 : clk));
+    ntt_flat #(.N(N), .D(D)) ntt2(.a(a[D*N-1:0]), .b(b2), .clk(j > D - 2 ? 1'B0 : clk));
     point_mod_mult #(.N(N), .D(D)) pm(.a(b1), .b(b2), .p(b3));
     intt_flat #(.N(N), .D(D)) intt1(.a(b3), .b(c), .clk(clk));
     // ntt_intt_flat_poly_mult #(.N(N), .D(D)) uut(.a(a[2*D*N-1:D*N]), .b(a[D*N-1:0]), .c(c));

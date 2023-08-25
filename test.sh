@@ -24,4 +24,4 @@ $PYTHON ./tests/$TB/gen.py
 $VERILOG_COMPLIER -g2012 -ldesigns -v -o ./simulations/$TB/"$TB"_tb.vvp -s "$TB"_tb $TEMP_FILE_NAME
 $VERILOG_RUNTIME -n -v ./simulations/$TB/"$TB"_tb.vvp -lxt2
 $PYTHON ./scripts/compare.py -t ./tests/$TB/testcase.txt -e ./tests/$TB/expected.txt -a ./tests/$TB/actual.txt
-# rm $TEMP_FILE_NAME
+rm $TEMP_FILE_NAME

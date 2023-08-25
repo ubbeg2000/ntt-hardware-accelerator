@@ -22,8 +22,8 @@
 //////////////////////////////////////////////////////////////////////////////////
 
 
-module ntt_intt_tb();
-    parameter N = 17, D = 128;
+module ntt_flat_tb();
+    parameter N = 17, D = 16;
     
     reg clk = 0, mode = 0;
     reg [D*N-1:0] a;
@@ -44,14 +44,14 @@ module ntt_intt_tb();
     ntt_flat #(.N(N), .D(D)) uut(.clk(clk), .a(a), .b(b));
 
     initial begin
-        $dumpfile("ntt_intt_tb.vcd");
-        $dumpvars(0, ntt_intt_tb);
+        $dumpfile("ntt_flat_tb.vcd");
+        $dumpvars(0, ntt_flat_tb);
         for (i=0;i<D;i=i+1) begin
             $dumpvars(1, bs[i]);
         end
 
-        testcase_file = $fopen("./tests/ntt_intt/testcase.txt", "r");
-        actual_file = $fopen("./tests/ntt_intt/actual.txt", "w");
+        testcase_file = $fopen("./tests/ntt_flat/testcase.txt", "r");
+        actual_file = $fopen("./tests/ntt_flat/actual.txt", "w");
     end
 
     always begin
