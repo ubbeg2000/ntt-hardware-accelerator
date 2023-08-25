@@ -13,14 +13,14 @@ module psi_table (
         4'B0011: value = 4096;
         4'B0100: value = 4;
         4'B0101: value = 1024;
-        4'B0110: value = 16;
-        4'B0111: value = 4096;
+        4'B0110: value = 64;
+        4'B0111: value = 16384;
         4'B1000: value = 2;
         4'B1001: value = 512;
-        4'B1010: value = 8;
-        4'B1011: value = 2048;
-        4'B1100: value = 32;
-        4'B1101: value = 8192;
+        4'B1010: value = 32;
+        4'B1011: value = 8192;
+        4'B1100: value = 8;
+        4'B1101: value = 2048;
         4'B1110: value = 128;
         4'B1111: value = 32768;
     endcase

@@ -39,8 +39,8 @@ module intt_pe #(parameter N = 9) (
 //        s = (((a + b) % 257) * c) % 257;
 //    end
     
-    adder #(.N(N+1)) add(.a(sub ? {32'B0, b} : {32'B0, a}), .b({sub ? 32'B1 : 32'B0, sub ? ~a : b}), .cin(sub), .s(addout));
-    modred #(.LOGQ(N)) mr0(.a({{N{addout[N]}}, addout}), .s(addoutred));
+    adder #(.N(N+1)) add(.a(sub ? {1'B0, b} : {1'B0, a}), .b({sub ? 1'B1 : 1'B0, sub ? ~a : b}), .cin(sub), .s(addout));
+    modred #(.LOGQ(N)) mr0(.a({{(N-1){addout[N]}}, addout}), .s(addoutred));
     multiplier #(.N(N)) mult(.b(addoutred), .a(c), .p(multout));
     modred #(.LOGQ(N)) mr1(.a(multout), .s(s)); 
 endmodule

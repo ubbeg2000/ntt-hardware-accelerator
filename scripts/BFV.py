@@ -268,7 +268,7 @@ class BFV:
     #
 
     def IntEncode(self, m):  # integer encode
-        mr = Poly(self.n, self.t)
+        mr = Poly(self.n, self.t, self.qnp)
         if m > 0:
             mt = m
             for i in range(self.n):

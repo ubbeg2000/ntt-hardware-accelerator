@@ -14,14 +14,19 @@ class Poly:
     #
 
     def randomize(self, B, domain=False, type=0, mu=0, sigma=0):
-        # type:0  uniform
-        # type:1  gauss
+        # type:0uniform
+        # type:1gauss
         if type == 0:
             self.F = [randint(-(B//2), B//2) % self.q for i in range(self.n)]
             self.inNTT = domain
-        else:
+        elif type == 1:
             # self.F = [randint(-(B//2), B//2) % self.q for i in range(self.n)]
             self.F = [int(gauss(mu, sigma)) % self.q for i in range(self.n)]
+            # self.F = [1 if e != 0 else 0 for e in self.F]
+            # print(self.F)
+            self.inNTT = domain
+        else:
+            self.F = [1 for i in range(self.n)]
             # self.F = [1 if e != 0 else 0 for e in self.F]
             # print(self.F)
             self.inNTT = domain
@@ -164,5 +169,5 @@ class Poly:
         else:
             b.F = INTT(self.F, self.np[1], self.q)
             b.inNTT = False
-        return b
+        return str(b.F)
 #

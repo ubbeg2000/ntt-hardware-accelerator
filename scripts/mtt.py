@@ -30,9 +30,6 @@ def find_nth_root_of_unity_mod_q(n, q):
 def find_2nth_rou(q, n):
     for i in range(2, q):
         if pow(i, 2*n, q) == 1 and gcd(i, q) == 1:
-            # for j in range(n):
-            #     if pow(i, j, q) == 1:
-            #         continue
             return i
 
     return None
@@ -43,19 +40,14 @@ def gen_w_table(q, n):
     psi = find_2nth_rou(q, n)
     for i in range(int(log2(n))):
         for j in range(2 ** i):
-            # w_table[i] = [pow(psi, n//(2 ** (i + 1)) +
-            #                   j * n//2, q)] + w_table[i]
-            p = n//(2 ** (i + 1)) + j * n//2
-            while p > n:
-                p -= (n - 2)
+            p = int("{:b}".format((2**i)+j).rjust(int(log2(n)), "0")[::-1], 2)
             w_table[i] = w_table[i] + [pow(psi, p, q)]
-            # w_table[i].append(pow(psi, n//(2 ** (i + 1)) + j * n//2, q))
 
-    print("w_table")
-    for i in range(len(w_table)):
-        for j in range(len(w_table[i])):
-            print(f"psi_table[{i}][{j}] = {w_table[i][j]};")
-    print("")
+    # print("w_table")
+    # for i in range(len(w_table)):
+    #     for j in range(len(w_table[i])):
+    #         print(f"psi_table[{i}][{j}] = {w_table[i][j]};")
+    # print("")
     generate_psi_table(n, q, w_table)
 
     return w_table
@@ -64,21 +56,16 @@ def gen_w_table(q, n):
 def gen_w_inv_table(q, n):
     w_inv_table = [[] for i in range(int(log2(n)))]
     psi = find_2nth_rou(q, n)
-    # print(psi)
+    
     for i in range(int(log2(n))):
         for j in range(2 ** i):
-            # w_inv_table[i] = [pow(psi, n//(2 ** (i + 1)) +
-            #                   j * n//2, q)] + w_inv_table[i]
-            p = n//(2 ** (i + 1)) + j * n//2
-            while p > n:
-                p -= (n - 2)
+            p = int("{:b}".format((2**i)+j).rjust(int(log2(n)), "0")[::-1], 2)
             w_inv_table[i] = w_inv_table[i] + [pow(psi, -p, q)]
-            # w_inv_table[i].append(pow(psi, n//(2 ** (i + 1)) + j * n//2, q))
 
-    print("w_inv_table")
-    for i in range(len(w_inv_table)):
-        for j in range(len(w_inv_table[i])):
-            print(f"psi_table[{i}][{j}] = {w_inv_table[i][j]};")
+    # print("w_inv_table")
+    # for i in range(len(w_inv_table)):
+    #     for j in range(len(w_inv_table[i])):
+    #         print(f"psi_table[{i}][{j}] = {w_inv_table[i][j]};")
 
     generate_psi_table(n, q, w_inv_table, "psi_inv_table")
 
@@ -158,7 +145,7 @@ def intt(a, q):
                 res[a_idx + jump] = b1 % q
 
                 # print(i, j, k, a_idx, a_idx + jump, W)
-        print(res)
+        # print(res)
 
     res = [(r * pow(n, -1, q)) % q for r in res]
 
@@ -190,18 +177,18 @@ def generate_psi_table(n, q, table, name="psi_table"):
     f.write("    end\n")
     f.write("endmodule\n")
 
-
-# print(gen_w_table(257, 8))
-# print(gen_w_inv_table(257, 8))
-print(gen_w_table(65537, 16))
-print(gen_w_inv_table(65537, 16))
-# print(ntt([1  for i in range(32)]))
-# a = ntt([1 for i in range(16)], 65537)
-# b = ntt([1 for i in range(32)], 65537)
-# c = [((a[i] * b[i]) % 65537) for i in range(32)]
-# print(a)
-# print(b)
-# print(c)
-# print("ASDF")
-# print(intt(a, 257))
-# print(intt(a, 65537))
+if __name__ == "__main__":
+    # print(gen_w_table(257, 8))
+    # print(gen_w_inv_table(257, 8))
+    print(gen_w_table(65537, 32))
+    print(gen_w_inv_table(65537, 32))
+    # print(ntt([1  for i in range(32)]))
+    # a = ntt([1 for i in range(16)], 65537)
+    # b = ntt([1 for i in range(16)], 65537)
+    # c = [((a[i] * b[i]) % 65537) for i in range(16)]
+    # print(a)
+    # print(b)
+    # print(intt(c, 65537))
+    # print("ASDF")
+    # print(intt(a, 257))
+    # print(intt(a, 65537))

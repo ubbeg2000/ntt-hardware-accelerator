@@ -37,7 +37,7 @@ module mux #(parameter N = 64, S = 64) (
             if (i == 0)
                 mux_2x1 #(.N(N)) m(.a(mux_out[i+1][2*j]), .b(mux_out[i+1][2*j+1]), .sel(sel[$clog2(S)-i-1]), .s(s));
             else if (i == $clog2(S) - 1)
-                mux_2x1 #(.N(N)) m(.a(a[N*(2*j+1):N*2*j]), .b(a[N*(2*j+2)-1:N*(2*j+1)]), .sel(sel[$clog2(S)-i-1]), .s(mux_out[i][j]));
+                mux_2x1 #(.N(N)) m(.a(a[N*(2*j+1)-1:N*2*j]), .b(a[N*(2*j+2)-1:N*(2*j+1)]), .sel(sel[$clog2(S)-i-1]), .s(mux_out[i][j]));
             else
                 mux_2x1 #(.N(N)) m(.a(mux_out[i+1][2*j]), .b(mux_out[i+1][2*j+1]), .sel(sel[$clog2(S)-i-1]), .s(mux_out[i][j]));
         end

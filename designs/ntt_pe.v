@@ -37,7 +37,7 @@ module ntt_pe #(parameter N = 2) (
     wire [N-1:0] mr0out;
     
     multiplier #(.N(N)) mult(.a(sub ? a : b), .b(c), .p(multp));
-    adder #(.N(2*N)) add(.a(sub ? {32'B0, b} : {32'B0, a}), .b(sub ? ~multp : multp), .cin(sub), .s(adds));
+    adder #(.N(2*N)) add(.a(sub ? {{N{1'B0}}, b} : {{N{1'B0}}, a}), .b(sub ? ~multp : multp), .cin(sub), .s(adds));
     modred #(.LOGQ(N)) mr(.a(adds), .s(s));
 
 //    always @(a, b, offset, sub) begin
