@@ -1,17 +1,5 @@
 from math import log2, ceil
 
-w = [
-    [241],
-    [64, 4],
-    [249, 128, 2, 225]
-]
-
-winv = [
-    [16],
-    [253, 193],
-    [32, 255, 129, 8],
-]
-
 
 def gcd(a, b):
     while b != 0:
@@ -35,9 +23,10 @@ def find_2nth_rou(q, n):
     return None
 
 
-def gen_w_table(q, n):
+def gen_w_table(q, n, psi=0):
     w_table = [[] for i in range(int(log2(n)))]
-    psi = find_2nth_rou(q, n)
+    if psi == 0:
+        psi = find_2nth_rou(q, n)
     for i in range(int(log2(n))):
         for j in range(2 ** i):
             p = int("{:b}".format((2**i)+j).rjust(int(log2(n)), "0")[::-1], 2)
@@ -53,9 +42,11 @@ def gen_w_table(q, n):
     return w_table
 
 
-def gen_w_inv_table(q, n):
+def gen_w_inv_table(q, n, psi=0):
     w_inv_table = [[] for i in range(int(log2(n)))]
-    psi = find_2nth_rou(q, n)
+
+    if psi == 0:
+        psi = find_2nth_rou(q, n)
     
     for i in range(int(log2(n))):
         for j in range(2 ** i):
@@ -72,10 +63,10 @@ def gen_w_inv_table(q, n):
     return w_inv_table
 
 
-def ntt(a, q):
+def ntt(a, q, print_step=False, psi=0):
     n = len(a)
     res = [a[i] for i in range(n)]
-    w_table = gen_w_table(q, n)
+    w_table = gen_w_table(q, n, psi)
     # print(res)
     for i in range(int(log2(n))):
         # print(f"STAGE {i + 1}")
@@ -93,7 +84,8 @@ def ntt(a, q):
                 res[a_idx + jump] = b1 % q
 
                 # print(i, j, k, a_idx, W)
-        print(res)
+        if print_step:
+            print(res)
 
     return res
 
@@ -124,10 +116,10 @@ def ntt_radix_4(a, q):
     return res
 
 
-def intt(a, q):
+def intt(a, q, psi=0):
     n = len(a)
     res = [a[i] for i in range(n)]
-    w_inv_table = gen_w_inv_table(q, n)
+    w_inv_table = gen_w_inv_table(q, n, psi)
     # print(res)
     for i in range(int(log2(n)) - 1, -1, -1):
         # print(f"STAGE {i + 1}")

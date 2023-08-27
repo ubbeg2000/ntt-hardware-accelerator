@@ -19,10 +19,10 @@ from math import log, ceil
 # Parameter generation (pre-defined or generate parameters)
 PD = 0  # 0: generate -- 1: pre-defined
 
-if PD == 0:
+if PD == 1:
     # Select one of the parameter sets below
     t = 65537
-    n, q, psi = 16, 65537, 2                # log(q) = 27
+    n, q, psi = 32, 65537, 2                # log(q) = 27
     # t = 256;  n, q, psi = 2048 , 137438691329      , 22157790             # log(q) = 37
     # t = 1024; n, q, psi = 4096 , 288230376135196673, 60193018759093       # log(q) = 58
     print("pgen", ParamGen(16, 17))
@@ -33,13 +33,14 @@ if PD == 0:
     wv = modinv(w, q)
 else:
     # Enter proper parameters below
-    t, n, logq = 8, 16, 17
+    t, n, logq = 8, 32, 17
     # t, n, logq = 30, 1024, 17
     # t, n, logq = 256, 2048, 37
     # t, n, logq = 1024, 4096, 58
 
     # other necessary parameters (based on n and log(q) determine other parameter)
     q, psi, psiv, w, wv = ParamGen(n, logq)
+    print(q, psi, psiv, w, wv)
 
 # Determine mu, sigma (for discrete gaussian distribution)
 mu = 0
@@ -77,7 +78,7 @@ Evaluator.EvalKeyGenV2(p)
 print(Evaluator)
 
 # Generate random message
-n1, n2 = 131071, 131071
+n1, n2 = pow(2, n)-1, pow(2, n)-1
 # n1, n2 = randint(-(2**15),2**15-1), randint(-(2**15),2**15-1)
 
 print("--- Random integers n1 and n2 are generated.")

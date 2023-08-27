@@ -110,7 +110,7 @@ def FindPrimitiveRoot(m, q):
     g = (q-1)//m
 
     if (q-1) != g*m:
-        return False
+        return False, 0
 
     attempt_ctr = 0
     attempt_max = 100
