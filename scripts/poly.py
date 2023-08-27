@@ -13,9 +13,9 @@ class Poly:
         self.inNTT = False
     #
 
+    # type:0 uniform
+    # type:1 gauss
     def randomize(self, B, domain=False, type=0, mu=0, sigma=0):
-        # type:0uniform
-        # type:1gauss
         if type == 0:
             self.F = [randint(-(B//2), B//2) % self.q for i in range(self.n)]
             self.inNTT = domain

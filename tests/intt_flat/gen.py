@@ -4,7 +4,7 @@ import sys
 sys.path.append(os.getcwd())
 
 from random import randint
-from scripts.mtt import ntt, intt
+from scripts.my_ntt import ntt, intt
 from scripts.test_utils import arr_to_bin_str
 
 from math import ceil, log2
