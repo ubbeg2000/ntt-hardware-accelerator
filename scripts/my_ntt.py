@@ -1,5 +1,5 @@
 from math import log2, ceil
-from ntt_utils import gen_w_table, gen_w_inv_table, int_to_bin
+from ntt_utils import gen_w_table, gen_w_inv_table
 
 
 def gcd(a, b):
@@ -49,7 +49,7 @@ def ntt(a, q, print_step=False, psi=0):
 
     return res
 
-def intt(a, q, psi=0):
+def intt(a, q, psi=0, print_step=False):
     n = len(a)
     res = [a[i] for i in range(n)]
     w_inv_table = gen_w_inv_table(q, n, psi)
@@ -70,7 +70,8 @@ def intt(a, q, psi=0):
                 res[a_idx + jump] = b1 % q
 
                 # print(i, j, k, a_idx, a_idx + jump, W)
-        # print(res)
+        if print_step:
+            print(res)
 
     res = [(r * pow(n, -1, q)) % q for r in res]
 
@@ -79,8 +80,8 @@ def intt(a, q, psi=0):
 if __name__ == "__main__":
     # print(gen_w_table(257, 8))
     # print(gen_w_inv_table(257, 8))
-    print(gen_w_table(65537, 32))
-    print(gen_w_inv_table(65537, 32))
+    print(gen_w_table(65537, 16))
+    print(gen_w_inv_table(65537, 16))
     # print(ntt([1  for i in range(32)]))
     # a = ntt([1 for i in range(16)], 65537)
     # b = ntt([1 for i in range(16)], 65537)

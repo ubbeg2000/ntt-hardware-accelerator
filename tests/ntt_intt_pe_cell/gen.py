@@ -18,16 +18,16 @@ tf = randint(0, Q)
 
 def model(a, b, tf, sub, inv):
     if sub == 0 and inv == 0:
-        return (a + b * tf) % Q
+        return (b * tf + a) % Q
     
     if sub == 1 and inv == 0:
-        return (a - b * tf) % Q
+        return (b - a * tf) % Q
     
     if sub == 0 and inv == 1:
-        return (a * tf + b * tf) % Q
+        return (b + a) % Q
     
     if sub == 1 and inv == 1:
-        return (a * tf - b * tf) % Q
+        return (b * tf - a * tf) % Q
 
 input_file = open("./tests/ntt_intt_pe_cell/testcase.txt", "w")
 output_file = open("./tests/ntt_intt_pe_cell/expected.txt", "w")
@@ -46,8 +46,6 @@ for i in range(3):
             output_file.write("{:s}\n".format(
                 int_to_bin_str(model(a, b, tf, sub, inv), length=N)
             ))
-
-            print(model(a, b, tf, sub, inv))
 
 
 input_file.close()

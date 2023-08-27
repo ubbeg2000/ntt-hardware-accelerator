@@ -4,10 +4,9 @@ import sys
 sys.path.append(os.getcwd())
 
 from random import randint
-from scripts.mtt import ntt
+from scripts.my_ntt import ntt
 from scripts.test_utils import arr_to_bin_str
 
-from math import ceil, log2
 from random import randint
 
 N = 17
