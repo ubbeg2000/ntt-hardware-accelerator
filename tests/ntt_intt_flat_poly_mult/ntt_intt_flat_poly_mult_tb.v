@@ -35,14 +35,6 @@ module ntt_intt_flat_poly_mult_tb();
     
     genvar i;
     generate
-    // for (i = 0; i < D; i = i+1) begin
-    //     assign a[N*(i+1)-1:N*i] = i + 1;
-    //     assign b[N*(i+1)-1:N*i] = D - i;
-    // end
-    
-    // ntt #(.N(N), .D(D)) fta(.a(a), .an(a_out));
-    // ntt #(.N(N), .D(D)) ftb(.a(b), .an(b_out));
-    
     for (i = 0; i < D; i = i+1) begin
         assign cs[i] = c[N*(i+1)-1:N*i];
         assign as[i] = b1[N*(i+1)-1:N*i];
@@ -54,7 +46,6 @@ module ntt_intt_flat_poly_mult_tb();
     ntt_flat #(.N(N), .D(D)) ntt2(.a(a[D*N-1:0]), .b(b2), .clk(j > D - 2 ? 1'B0 : clk));
     point_mod_mult #(.N(N), .D(D)) pm(.a(b1), .b(b2), .p(b3));
     intt_flat #(.N(N), .D(D)) intt1(.a(b3), .b(c), .clk(clk));
-    // ntt_intt_flat_poly_mult #(.N(N), .D(D)) uut(.a(a[2*D*N-1:D*N]), .b(a[D*N-1:0]), .c(c));
 
     initial begin
         $dumpfile("ntt_intt_flat_poly_mult_tb.vcd");

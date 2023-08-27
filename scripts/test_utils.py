@@ -7,3 +7,6 @@ def arr_to_bin_str(arr, length=8):
 
 def point_mult(a, b, Q):
     return [(a[i] * b[i])%Q for i in range(min(len(a), len(b)))]
+
+def int_to_bin_str(num, length=8):
+    return "{:b}".format(num).rjust(length, "0")

@@ -39,13 +39,4 @@ module ntt_pe #(parameter N = 2) (
     multiplier #(.N(N)) mult(.a(sub ? a : b), .b(c), .p(multp));
     adder #(.N(2*N)) add(.a(sub ? {{N{1'B0}}, b} : {{N{1'B0}}, a}), .b(sub ? ~multp : multp), .cin(sub), .s(adds));
     modred #(.LOGQ(N)) mr(.a(adds), .s(s));
-
-//    always @(a, b, offset, sub) begin
-//    if (sub == 1)
-//        s = (offset - ((a * b) % 257)) % 257;
-//    else
-//        s = (offset + ((a * b) % 257)) % 257;
-//    end
-    
-//    assign s = (offset + (sub ? -((a * b) % 257) : ((a * b) % 257))) % 257;
 endmodule
