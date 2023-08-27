@@ -1,3 +1,9 @@
 *.vcd
 .vscode
 simulations/
+/psi_inv_table.v
+/psi_inv_table.v
+scripts/psi_table.v
+scripts/psi_inv_table.v
+psi_table.v
+psi_inv_table.v
