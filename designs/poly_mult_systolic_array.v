@@ -25,13 +25,12 @@ module poly_mult_systolic_array #(parameter D = 4, N = 4) (
     input [D*N-1:0] vert,
     input clk,
     input rst,
-    output [2*N*(2*D-1)-1:0] p
+    output [D*N-1:0] p
     );
     
-    parameter N_OUT = 2 * N;
-    
     wire [N-1:0] horz_out [D-1:0][D-1:0];
-    wire [N_OUT-1:0] diag_out [D-1:0][D-1:0];
+    wire [N-1:0] diag_out [D-1:0][D-1:0];
+    wire [N*(2*D-1)-1:0] p_temp;
     
     genvar i, j;
     
@@ -41,7 +40,7 @@ module poly_mult_systolic_array #(parameter D = 4, N = 4) (
             poly_mult_pe_cell #(.N(N)) pe(
                 .horz(horz[N*(D-i)-1:N*(D-1-i)]), 
                 .vert(vert[N*(j+1)-1:N*j]), 
-                .offset({N_OUT{0}}), 
+                .offset({N{1'B0}}), 
                 .clk(clk),  
                 .rst(rst),
                 .horz_out(horz_out[i][j]), 
@@ -73,7 +72,7 @@ module poly_mult_systolic_array #(parameter D = 4, N = 4) (
             poly_mult_pe_cell #(.N(N)) pe(
                 .horz(horz_out[i][j-1]), 
                 .vert(vert[N*(j+1)-1:N*j]), 
-                .offset({N_OUT{0}}), 
+                .offset({N{1'B0}}), 
                 .clk(clk), 
                 .rst(rst),
                 .horz_out(horz_out[i][j]), 
@@ -85,13 +84,15 @@ module poly_mult_systolic_array #(parameter D = 4, N = 4) (
     
     generate
     for (j = 0; j < D; j = j + 1) begin
-        assign p[N_OUT*(j+1)-1:N_OUT*j] = diag_out[D-1][j];
+        assign p_temp[N*(j+1)-1:N*j] = diag_out[D-1][j];
     end
     endgenerate
     
     generate
     for (i = D - 2; i >= 0; i = i - 1) begin
-        assign p[N_OUT*D+N_OUT*(D-1-i)-1:N_OUT*D+N_OUT*(D-2-i)] = diag_out[i][D-1];
+        assign p_temp[N*D+N*(D-1-i)-1:N*D+N*(D-2-i)] = diag_out[i][D-1];
     end
     endgenerate
+
+    poly_sub #(.N(N), .D(D)) psub(.a(p_temp[D*N-1:0]), .b({{N{1'B0}}, p_temp[(2*D-1)*N-1:D*N]}), .s(p));
 endmodule

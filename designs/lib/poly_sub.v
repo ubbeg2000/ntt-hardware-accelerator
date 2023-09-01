@@ -30,7 +30,10 @@ module poly_sub #(parameter D = 2, parameter N = 2) (
     
     generate
     for (i = 0; i < D; i = i + 1) begin
-        adder #(.N(N)) add(.a(a[(i+1)*N-1:i*N]), .b(~b[(i+1)*N-1:i*N]), .cin(1), .s(s[(i+1)*N-1:i*N]));
+        wire [N-1:0] add_out;
+        wire c_out;
+        adder #(.N(N)) add(.a(a[(i+1)*N-1:i*N]), .b(~b[(i+1)*N-1:i*N]), .cin(1'B1), .s(add_out), .cout(c_out));
+        modred #(.LOGQ(N)) mr(.a({add_out[N-1] ? {N{1'B1}} : {N{1'B0}}, add_out}), .s(s[(i+1)*N-1:i*N]));
     end
     endgenerate
 endmodule

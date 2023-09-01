@@ -20,7 +20,7 @@
 //////////////////////////////////////////////////////////////////////////////////
 
 
-module intt_flat #(parameter N = 17, D = 8, NINV=61441) (
+module intt_flat #(parameter N = 17, D = 8, NINV=57345) (
     input [D*N-1:0] a,
     input clk,
     output [D*N-1:0] b

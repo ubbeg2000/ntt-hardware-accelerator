@@ -13,17 +13,17 @@ Q = 65537
 
 ones_arr = [1 for i in range(D)]
 num_arr = [i+1 for i in range(D)]
-rand_arr_1 = [randint(0, 8) for i in range(D)]
-rand_arr_2 = [randint(0, 8) for i in range(D)]
+rand_arr_1 = [randint(0, Q-1) for i in range(D)]
+rand_arr_2 = [randint(0, Q-1) for i in range(D)]
 
 ones_arr_n = ntt(ones_arr, Q)
 num_arr_n = ntt(num_arr, Q)
 rand_arr_1_n = ntt(rand_arr_1, Q)
 rand_arr_2_n = ntt(rand_arr_2, Q)
 
-case_1 = intt(point_mult(ones_arr_n, ones_arr_n), Q)
-case_2 = intt(point_mult(num_arr_n, num_arr_n), Q)
-case_3 = intt(point_mult(rand_arr_1_n, rand_arr_2_n), Q)
+case_1 = intt(point_mult(ones_arr_n, ones_arr_n, Q), Q)
+case_2 = intt(point_mult(num_arr_n, num_arr_n, Q), Q)
+case_3 = intt(point_mult(rand_arr_1_n, rand_arr_2_n, Q), Q)
 
 input_file = open("./tests/karatsuba_negacyclic_conv/testcase.txt", "w")
 input_file.write(f"{arr_to_bin_str(ones_arr, length=N)}{arr_to_bin_str(ones_arr, length=N)}\n")
