@@ -7,7 +7,8 @@ module ntt_intt_pu #(parameter N = 17, D = 16, NINV=61441) (
     input rst,
     input [D*N-1:0] twiddle_factor,
     input [D*N-1:0] inverse_twiddle_factor,
-    output [D*N-1:0] an
+    output [D*N-1:0] an,
+    output done
     );
 
     wor [N-1:0] pe_b [D-1:0];
