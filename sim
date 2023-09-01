@@ -19,7 +19,7 @@ printf "\n\n" >> $TEMP_FILE_NAME
 cat $TOP >> $TEMP_FILE_NAME
 mkdir -p ./simulations/$TB
 
-$VERILOG_COMPLIER -g2012 -ldesigns -v -o ./simulations/$TB/"$TB"_tb.vvp -s "$TB"_tb $TEMP_FILE_NAME > ./simulations/$TB/$TB_tb_compile.log
+$VERILOG_COMPLIER -g2005 -ldesigns -v -S -o ./simulations/$TB/"$TB"_tb.vvp -s "$TB"_tb $TEMP_FILE_NAME > ./simulations/$TB/$TB_tb_compile.log
 $VERILOG_RUNTIME -n -v ./simulations/$TB/"$TB"_tb.vvp -lxt2 > ./simulations/$TB/"$TB"_tb_sim.log
-gtkwave "$(echo $TB)_tb.vcd"
+gtkwave "$(echo $TB)_tb.vcd" &
 rm $TEMP_FILE_NAME
