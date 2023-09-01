@@ -1,7 +1,6 @@
 from math import log2, ceil
 from ntt_utils import gen_w_table, gen_w_inv_table
 
-
 def gcd(a, b):
     while b != 0:
         a, b = b, a % b
@@ -80,8 +79,8 @@ def intt(a, q, psi=0, print_step=False):
 if __name__ == "__main__":
     # print(gen_w_table(257, 8))
     # print(gen_w_inv_table(257, 8))
-    print(gen_w_table(65537, 16))
-    print(gen_w_inv_table(65537, 16))
+    print(gen_w_table(65537, 8))
+    print(gen_w_inv_table(65537, 8))
     # print(ntt([1  for i in range(32)]))
     # a = ntt([1 for i in range(16)], 65537)
     # b = ntt([1 for i in range(16)], 65537)

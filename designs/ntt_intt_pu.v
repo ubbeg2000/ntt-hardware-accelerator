@@ -5,6 +5,8 @@ module ntt_intt_pu #(parameter N = 17, D = 16, NINV=61441) (
     input clk,
     input inv,
     input rst,
+    input [D*N-1:0] twiddle_factor,
+    input [D*N-1:0] inverse_twiddle_factor,
     output [D*N-1:0] an
     );
 
@@ -15,9 +17,11 @@ module ntt_intt_pu #(parameter N = 17, D = 16, NINV=61441) (
     wire [$clog2($clog2(D))-1:0] cnt_reg_val = 0, cnt_out = 0;
     wire [$clog2(D)*D-1:0] sub_mux_in;
     wire [$clog2($clog2(D))-1:0] count_q;
+    wire [D*N-1:0] tf;
     
     counter #(.N($clog2($clog2(D)))) stage_counter(.clk(clk), .rst(rst), .down(inv), .count(count_q));
     mux #(.N(D), .S($clog2(D))) sub_mux(.a(sub_mux_in), .sel(count_q), .s(sub_mux_out));
+    twiddle_factor_generator #(.N(N), .D(D)) tfg(.tf_in(twiddle_factor), .tf_in_inv(inverse_twiddle_factor), .inv(inv), .stage(count_q), .tf(tf));
     
     genvar i, j;
     generate
@@ -60,24 +64,10 @@ module ntt_intt_pu #(parameter N = 17, D = 16, NINV=61441) (
             .sel(count_q),
             .s(c_in)
             );
-        psi_table pt(
-            .addr(c_in), 
-            .value(pt_out)
-            );
-        psi_inv_table pit(
-            .addr(c_in), 
-            .value(pit_out)
-            );
-        mux_2x1 #(.N(N)) tfmux(
-            .a(pt_out), 
-            .b(pit_out), 
-            .sel(inv), 
-            .s(c_out))
-            ;
         ntt_intt_pe_cell #(.N(N)) pe(
             .a(reg_out[i]), 
             .b(pe_b[i]), 
-            .tf(c_out),
+            .tf(tf[N*(i+1)-1:N*i]),
             .sub(sub_mux_out[i]),
             .inv(inv), 
             .p(reg_in[i])

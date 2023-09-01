@@ -43,13 +43,9 @@ module karatsuba_poly_mult_preprocessor #(parameter N = 4, D = 4) (
         
     generate
     if (D == 4) begin
-        poly_mult #(.N(N)) multlow(.a(a[D*N/2-1:0]), .b(b[D*N/2-1:0]), .p(ab_low));
-        poly_mult #(.N(N)) multmid(.a(a_mid), .b(b_mid), .p(ab_mid_temp_0));
-        poly_mult #(.N(N)) multhigh(.a(a[D*N-1:D*N/2]), .b(b[D*N-1:D*N/2]), .p(ab_high));
-    
-//        for (i = 0; i < D-1; i = i + 1) begin
-//            assign ab_mid[(i+1)*N-1:i*N] = ab_mid_temp_2[i*2*(N+1)+N-1:i*2*(N+1)];
-//        end
+        poly_mult_mod #(.N(N)) multlow(.a(a[D*N/2-1:0]), .b(b[D*N/2-1:0]), .p(ab_low));
+        poly_mult_mod #(.N(N)) multmid(.a(a_mid), .b(b_mid), .p(ab_mid_temp_0));
+        poly_mult_mod #(.N(N)) multhigh(.a(a[D*N-1:D*N/2]), .b(b[D*N-1:D*N/2]), .p(ab_high));
     end else begin
        karatsuba_poly_mult_preprocessor #(.N(N), .D(D/2)) kpmphigh(.a(a[D*N-1:D*N/2]), .b(b[D*N-1:D*N/2]), .clk(clk), .p(ab_high));
        karatsuba_poly_mult_preprocessor #(.N(N), .D(D/2)) kpmpmid(.a(a_mid), .b(b_mid), .clk(clk), .p(ab_mid_temp_0));
@@ -59,7 +55,7 @@ module karatsuba_poly_mult_preprocessor #(parameter N = 4, D = 4) (
     
     poly_sub #(.D(D-1), .N(N)) submid1(.a(ab_mid_temp_0), .b(ab_low), .s(ab_mid_temp_1));
     poly_sub #(.D(D-1), .N(N)) submid2(.a(ab_mid_temp_1), .b(ab_high), .s(ab_mid));
-    poly_add #(.D(2*D-1), .N(N)) pa_out(.a({ab_high, {(N){1'B0}}, ab_low}), .b({128'D0, ab_mid} << (D*N/2)), .s(ab_full));
+    poly_add #(.D(2*D-1), .N(N)) pa_out(.a({ab_high, {(N){1'B0}}, ab_low}), .b({{(D*N/2){1'B0}}, ab_mid} << (D*N/2)), .s(ab_full));
 
     master_slave_dff #(.N((2*D-1)*N)) msdff(.d(ab_full), .rst(1'B0), .clk(clk), .q(p));
 endmodule
