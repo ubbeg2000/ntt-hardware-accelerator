@@ -31,8 +31,8 @@ for (i, testcase) in enumerate(testcase_file.readlines()):
 
     print(f"Testcase #{i+1}")
     print(f"Case     : {t}")
-    print(f"Expected : {e}")
-    print(f"Actual   : {a}")
+    print(f"Expected : {e} {int(e, 2)}")
+    print(f"Actual   : {a} {int(a, 2)}")
     
     if e != a:
         print("NOK\n")

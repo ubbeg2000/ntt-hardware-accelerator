@@ -1,13 +1,17 @@
 from ntt_utils import clog2, gen_w_inv_table, int_to_bin
+from helper import modinv
 # from my_ntt import gen_w_table
 
 D = 16
 a = []
 t = gen_w_inv_table(65537, D, 2)
-print(t)
+mi = pow(D, -1, 65537)
+print(t, mi)
+i = 0
 for r in t:
     for c in r:
-        a = [c] + a
+        # print(c)
+        a = [(c*mi)%65537] + a
 for c in a:
     print(c, end=" ")
 print("")

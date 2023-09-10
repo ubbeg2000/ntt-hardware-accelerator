@@ -1,31 +1,11 @@
-`timescale 1ns / 1ps
-//////////////////////////////////////////////////////////////////////////////////
-// Company: 
-// Engineer: 
-// 
-// Create Date: 19.07.2023 18:26:19
-// Design Name: 
-// Module Name: multiplier
-// Project Name: 
-// Target Devices: 
-// Tool Versions: 
-// Description: 
-// 
-// Dependencies: 
-// 
-// Revision:
-// Revision 0.01 - File Created
-// Additional Comments:
-// 
-//////////////////////////////////////////////////////////////////////////////////
+`timescale 1ps/1ps
 
-
-module multiplier #(parameter N = 1) (
-    input [N-1:0] a,
-    input [N-1:0] b,
+module multiplier_signed #(parameter N = 17) (
+    input signed [N-1:0] a,
+    input signed [N-1:0] b,
     output [2*N-1:0] p
     );
-    
+
     genvar i;
     
     wire [2*N-1:0] adder_out [N-1:0];
@@ -40,16 +20,25 @@ module multiplier #(parameter N = 1) (
                 .b({{N{1'B0}}, b} & {(2*N){a[i]}}), 
                 .cin(1'B0), 
                 .s(adder_out[i])
-                );
+            );
+        else if (i == N-1)
+            adder #(.N(2*N)) add(
+                .a(adder_out[i-1]), 
+                .b(~{{{{N{1'B0}}, b} << i} & {(2*N){a[i]}}}), 
+                .cin(1'B1), 
+                .s(adder_out[i])
+            );
         else
             adder #(.N(2*N)) add(
                 .a(adder_out[i-1]), 
                 .b({{{N{1'B0}}, b} << i} & {(2*N){a[i]}}), 
                 .cin(1'B0), 
                 .s(adder_out[i])
-                );
+            );
     end
     endgenerate
     
     assign p = adder_out[N-1];
+
+    // assign p = a * b;
 endmodule
