@@ -20,5 +20,5 @@ printf "\n\n" >> $TEMP_FILE_NAME
 cat $TOP >> $TEMP_FILE_NAME
 mkdir -p ./simulations/$TB
 
-$VERILOG_COMPLIER -g2005 -ldesigns -d synth2 -S -tsizer -o ./simulations/$TB/sizer.txt -s top $TEMP_FILE_NAME
+$VERILOG_COMPLIER -g2005 -ldesigns -S -tsizer -o ./simulations/$TB/sizer.txt -s top $TEMP_FILE_NAME
 rm $TEMP_FILE_NAME

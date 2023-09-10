@@ -21,7 +21,7 @@
 
 
 module poly_mult_systolic_array_tb();
-    parameter N = 17, D = 16;
+    parameter N = 17, D = 8;
 
     reg [2*N*D-1:0] buffer;
     reg [N*D-1:0] a, b;

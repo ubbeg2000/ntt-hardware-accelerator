@@ -12,9 +12,9 @@ N = 17
 D = 16
 Q = 65537
 
-a = 1 #randint(0, Q)
-b = 2#randint(0, Q)
-tf = 1#randint(0, Q)
+a = randint(0, Q)
+b = randint(0, Q)
+tf = randint(0, Q)
 
 def model(a, b, tf, sub, inv):
     if sub == 0 and inv == 0:
@@ -29,8 +29,8 @@ def model(a, b, tf, sub, inv):
     if sub == 1 and inv == 1:
         return (b * tf - a * tf) % Q
 
-input_file = open("./tests/ntt_intt_pe_cell/testcase.txt", "w")
-output_file = open("./tests/ntt_intt_pe_cell/expected.txt", "w")
+input_file = open("./tests/ntt_intt_pe_cell_v2/testcase.txt", "w")
+output_file = open("./tests/ntt_intt_pe_cell_v2/expected.txt", "w")
 
 for i in range(3):
     for sub in range(2):

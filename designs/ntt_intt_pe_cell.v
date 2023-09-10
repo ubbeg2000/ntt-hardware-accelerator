@@ -4,7 +4,6 @@ module ntt_intt_pe_cell #(parameter N = 17) (
     input [N-1:0] a,
     input [N-1:0] b,
     input [N-1:0] tf,
-    input [N-1:0] q,
     input inv,
     input sub,
     output [N-1:0] p
