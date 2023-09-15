@@ -21,4 +21,5 @@ cat $TOP >> $TEMP_FILE_NAME
 mkdir -p ./simulations/$TB
 
 $VERILOG_COMPLIER -g2005 -ldesigns -S -tsizer -o ./simulations/$TB/sizer.txt -s top $TEMP_FILE_NAME
+tail -20 ./simulations/$TB/sizer.txt
 rm $TEMP_FILE_NAME

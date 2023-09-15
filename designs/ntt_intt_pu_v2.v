@@ -18,11 +18,13 @@ module ntt_intt_pu_v2 #(parameter N = 17, D = 16, NINV=61441) (
     wire [$clog2(D)*D-1:0] sub_mux_in;
     wire [$clog2($clog2(D))-1:0] count_q;
     wire [D*N-1:0] tf;
+    wire cntrl_out;
     
     counter #(.N($clog2($clog2(D)))) stage_counter(.clk(clk), .rst(rst), .down(inv), .count(count_q));
     mux #(.N(D), .S($clog2(D))) sub_mux(.a(sub_mux_in), .sel(count_q), .s(sub_mux_out));
     twiddle_factor_generator #(.N(N), .D(D)) tfg(.tf_in(twiddle_factor), .tf_in_inv(inverse_twiddle_factor), .inv(inv), .stage(count_q), .tf(tf));
-    
+    mux_2x1 #(.N(1)) cntrl_mux(.a(&count_q), .b(~(|count_q)), .sel(inv), .s(cntrl_out));
+
     genvar i, j;
     generate
     for (i = 0; i < $clog2(D); i=i+1) begin
@@ -34,8 +36,8 @@ module ntt_intt_pu_v2 #(parameter N = 17, D = 16, NINV=61441) (
     for (i = 0; i < D; i = i+1) begin
         wor [$clog2(D)*N-1:0] demux_out; 
         wire [$clog2(D)*$clog2(D)-1:0] mux_in;
-        wire [N-1:0] pt_out, pit_out, c_out;
-        wire [$clog2(D)-1:0] c_in;
+        wire [N-1:0] pt_out, pit_out;
+        wire [N-1:0] msdff_in;
         
         for (j = 0; j < $clog2(D); j=j+1) begin
             localparam mult_index = i/(2**($clog2(D)-j));
@@ -48,21 +50,22 @@ module ntt_intt_pu_v2 #(parameter N = 17, D = 16, NINV=61441) (
                 assign pe_b[i+jump] = demux_out[N*(j+1)-1:N*j];
         end
         
+        mux_2x1 #(.N(N)) msdff_mux(
+            .a(reg_in[i]), 
+            .b(a[N*(i+1)-1:N*i]), 
+            .sel(cntrl_out), 
+            .s(msdff_in)
+            );
         master_slave_dff #(.N(N)) msdff(
             .clk(clk), 
             .rst(rst), 
-            .d(count_q == {$clog2($clog2(D)){inv ? 1'B0 : 1'B1}} ? a[N*(i+1)-1:N*i] : reg_in[i]), 
+            .d(msdff_in), 
             .q(reg_out[i])
             );
         demux #(.N(N), .S($clog2(D))) dem(
             .a(reg_out[i]), 
             .sel(count_q), 
             .s(demux_out)
-            );
-        mux #(.N($clog2(D)), .S($clog2(D))) m(
-            .a(mux_in),
-            .sel(count_q),
-            .s(c_in)
             );
         ntt_intt_pe_cell_v2 #(.N(N)) pe(
             .a(reg_out[i]), 
