@@ -106,6 +106,8 @@ if __name__ == "__main__":
     ntt1 = [pow(n, 2, Q) for n in ntt1]
     ntt2 = [pow(n, 2, Q) for n in ntt2]
 
+    print(f"INDEX GEN: {len(index_generator(64, 4))}", index_generator(64, 4))
+
     print(intt(ntt1, Q, psi=PSI))
     print(intt(ntt2, Q, psi=PSI))
     print(negacyclic_conv(inp, inp, Q))

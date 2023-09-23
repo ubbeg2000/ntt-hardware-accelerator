@@ -1,13 +1,11 @@
 `timescale 1ns / 1ps
-
-//`include "dff.v"
 //////////////////////////////////////////////////////////////////////////////////
 // Company: 
 // Engineer: 
 // 
-// Create Date: 25.07.2023 11:41:37
+// Create Date: 03.08.2023 11:41:24
 // Design Name: 
-// Module Name: master_slave_dff
+// Module Name: point_mod_mult
 // Project Name: 
 // Target Devices: 
 // Tool Versions: 
@@ -21,20 +19,21 @@
 // 
 //////////////////////////////////////////////////////////////////////////////////
 
-module master_slave_dff #(parameter N = 2) (
-    input [N-1:0] d,
-    input clk,
-    input rst,
-    output [N-1:0] q
+
+module point_mod_mult_v2 #(parameter N = 19, D = 8) (
+    input [D*N-1:0] a,
+    input [D*N-1:0] b,
+    output [D*N-1:0] p
     );
-    
-    wire [N-1:0] q_master;
     
     genvar i;
     generate
-    for (i = 0; i < N; i = i + 1) begin
-        dff master(.d(d[i]), .clk(clk), .rst(rst), .q(q[i]));
-        // dff slave(.d(q_master[i]), .clk(~clk), .rst(rst), .q(q[i]));
+    for (i = 0; i < D; i = i+1) begin
+        modred_multiplier_v2 #(.LOGQ(N)) mul(
+            .a(a[(i+1)*N-1:i*N]), 
+            .b(b[(i+1)*N-1:i*N]), 
+            .p(p[(i+1)*N-1:i*N])
+            );
     end
     endgenerate
 endmodule

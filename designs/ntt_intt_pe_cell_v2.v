@@ -27,5 +27,5 @@ module ntt_intt_pe_cell_v2 #(parameter N = 17) (
 
     multiplier_signed #(.N(N+1)) mul0(.a(m1_out), .b({1'B0, m2_out}), .p(mul0_out));
 
-    modred #(.LOGQ(N)) mr0(.a(add1_out), .s(p));
+    modred_v2 #(.LOGQ(N)) mr0(.a(add1_out), .s(p));
 endmodule

@@ -55,12 +55,17 @@ def gen_w_table(q, n, psi=0):
 def gen_w_inv_table(q, n, psi=0):
     w_inv_table = [[] for i in range(int(log2(n)))]
 
+    skew = pow(2, -1, q)
+
     if psi == 0:
         psi = find_2nth_rou(q, n)
     
     for i in range(int(log2(n))):
         for j in range(2 ** i):
             p = int("{:b}".format((2**i)+j).rjust(int(log2(n)), "0")[::-1], 2)
+            # if 2**i != 1:
+            #     w_inv_table[i] = w_inv_table[i] + [pow(pow(psi, -p, q) * skew, 1, q)]
+            # else:
             w_inv_table[i] = w_inv_table[i] + [pow(psi, -p, q)]
 
     # print("w_inv_table")

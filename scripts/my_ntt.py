@@ -82,12 +82,12 @@ if __name__ == "__main__":
     print(gen_w_table(65537, 8))
     print(gen_w_inv_table(65537, 8))
     # print(ntt([1  for i in range(32)]))
-    # a = ntt([1 for i in range(16)], 65537)
-    # b = ntt([1 for i in range(16)], 65537)
-    # c = [((a[i] * b[i]) % 65537) for i in range(16)]
-    # print(a)
-    # print(b)
-    # print(intt(c, 65537))
+    a = ntt([1 for i in range(16)], 65537)
+    b = ntt([1 for i in range(16)], 65537)
+    c = [((a[i] * b[i]) % 65537) for i in range(16)]
+    print(a)
+    print(b)
+    print(intt(c, 65537))
     # print("ASDF")
     # print(intt(a, 257))
     # print(intt(a, 65537))
