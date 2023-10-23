@@ -35,9 +35,18 @@ module modred_v2 #(parameter LOGQ = 17) (
     assign pos = ~t[LOGQ];
     assign gte = t[LOGQ-1] & |t[LOGQ-2:0] & pos;
     
-    adder #(.N(LOGQ+1)) a0(.a({2'B0, a[K-1:0]}), .b(~a[2*LOGQ-1:K]), .cin(1'B1), .s(t));
-    adder #(.N(LOGQ+1)) a1(.a(t), .b({(LOGQ+1){pos}}^m0_out), .cin(pos), .s(s_temp));
-    mux_2x1 #(.N(LOGQ+1)) m0(.a({(LOGQ+1){1'B0}}), .b(Q[LOGQ:0]), .sel(gte|(~gte&~pos)), .s(m0_out));
+    adder #(.N(LOGQ+1)) a0(
+        .a({2'B0, a[K-1:0]}), 
+        .b(~a[2*LOGQ-1:K]), 
+        .cin(1'B1), 
+        .s(t)
+    );
+    adder #(.N(LOGQ+1)) a1(
+        .a(t), 
+        .b({(LOGQ+1){pos}}^(Q[LOGQ:0]&{(LOGQ+1){gte|(~gte&~pos)}})), 
+        .cin(pos), 
+        .s(s_temp)
+    );
 
     assign s = s_temp[LOGQ-1:0];
     

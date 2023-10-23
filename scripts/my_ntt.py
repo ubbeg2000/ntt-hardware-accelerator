@@ -1,5 +1,6 @@
 from math import log2, ceil
 from ntt_utils import gen_w_table, gen_w_inv_table
+from random import randint
 
 def gcd(a, b):
     while b != 0:
@@ -26,6 +27,7 @@ def ntt(a, q, print_step=False, psi=0):
     n = len(a)
     res = [a[i] for i in range(n)]
     w_table = gen_w_table(q, n, psi)
+    # print("WTAB", w_table)
     # print(res)
     for i in range(int(log2(n))):
         # print(f"STAGE {i + 1}")
@@ -62,30 +64,35 @@ def intt(a, q, psi=0, print_step=False):
 
                 W = w_inv_table[i][j]
 
-                b0 = (res[a_idx] + res[a_idx + jump])
+                b0 = (res[a_idx] + res[a_idx + jump]) * pow(2, -1, q)
                 b1 = (res[a_idx] - res[a_idx + jump]) * W
 
                 res[a_idx] = b0 % q
                 res[a_idx + jump] = b1 % q
 
                 # print(i, j, k, a_idx, a_idx + jump, W)
+    
         if print_step:
             print(res)
 
-    res = [(r * pow(n, -1, q)) % q for r in res]
+    # res = [(r * pow(n, -1, q)) % q for r in res]
 
     return res
 
 if __name__ == "__main__":
+    N = 16
     # print(gen_w_table(257, 8))
     # print(gen_w_inv_table(257, 8))
-    print(gen_w_table(65537, 8))
-    print(gen_w_inv_table(65537, 8))
+    print(gen_w_table(65537, N))
+    print(gen_w_inv_table(65537, N))
     # print(ntt([1  for i in range(32)]))
-    a = ntt([1 for i in range(16)], 65537)
-    b = ntt([1 for i in range(16)], 65537)
-    c = [((a[i] * b[i]) % 65537) for i in range(16)]
-    print(a)
+    inp = [randint(0, 65536) for i in range(N)]
+    a = ntt(inp, 65537)
+    b = ntt(inp, 65537)
+    c = [((a[i] * b[i]) % 65537) for i in range(N)]
+    ar = intt(a, 65537)
+    print(a, inp == ar)
+    print(ar)
     print(b)
     print(intt(c, 65537))
     # print("ASDF")

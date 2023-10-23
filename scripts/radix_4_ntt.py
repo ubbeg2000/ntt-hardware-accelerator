@@ -48,7 +48,7 @@ def intt(a, q, psi=0, print_step=False):
         if print_step:
             print(res)
 
-    res = [(r * pow(n, -1, q)) % q for r in res]
+    # res = [(r * pow(n, -1, q)) % q for r in res]
 
     return res
 
@@ -87,7 +87,7 @@ def radix_4_intt():
 
 
 if __name__ == "__main__":
-    inp = [1, 2, 3, 4]
+    inp = [1, 1, 1, 1]
     inpt = ntt(inp, 65537, psi=2)
     print(ntt(inp, 65537, psi=2))
     print(gen_w_table(65537, 4, 2))

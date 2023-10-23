@@ -21,13 +21,13 @@
 
 
 module modred_multiplier_v2 #(parameter LOGQ = 17) (
-    input [LOGQ-1:0] a,
-    input [LOGQ-1:0] b,
+    input [LOGQ:0] a,
+    input [LOGQ:0] b,
     output [LOGQ-1:0] p
     );
     
-    wire [2*LOGQ-1:0] prod;
+    wire [2*LOGQ+1:0] prod;
     
-    multiplier #(.N(LOGQ)) multiplier(.a(a), .b(b), .p(prod));
-    modred_v2 #(.LOGQ(LOGQ)) mr(.a(prod), .s(p));
+    multiplier_signed #(.N(LOGQ+1)) multiplier(.a(a), .b(b), .p(prod));
+    modred_v2 #(.LOGQ(LOGQ)) mr(.a(prod[2*LOGQ-1:0]), .s(p));
 endmodule

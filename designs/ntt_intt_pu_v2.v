@@ -1,6 +1,6 @@
 `timescale 1ps/1ps
 
-module ntt_intt_pu_v2 #(parameter N = 17, D = 16, NINV=61441) (
+module ntt_intt_pu_v2 #(parameter N = 17, D = 32, NINV=61441) (
     input [D*N-1:0] a,
     input clk,
     input inv,
@@ -20,10 +20,29 @@ module ntt_intt_pu_v2 #(parameter N = 17, D = 16, NINV=61441) (
     wire [D*N-1:0] tf;
     wire cntrl_out;
     
-    up_down_counter #(.N($clog2($clog2(D)))) stage_counter(.clk(clk), .down(inv), .count(count_q));
-    mux #(.N(D), .S($clog2(D))) sub_mux(.a(sub_mux_in), .sel(count_q), .s(sub_mux_out));
-    twiddle_factor_generator #(.N(N), .D(D)) tfg(.tf_in(twiddle_factor), .tf_in_inv(inverse_twiddle_factor), .inv(inv), .stage(count_q), .tf(tf));
-    mux_2x1 #(.N(1)) cntrl_mux(.a(&count_q), .b(~(|count_q)), .sel(inv), .s(cntrl_out));
+    up_down_counter #(.N($clog2($clog2(D)))) stage_counter(
+        .clk(clk), 
+        .down(inv), 
+        .count(count_q)
+    );
+    mux #(.N(D), .S($clog2(D))) sub_mux(
+        .a(sub_mux_in), 
+        .sel(count_q), 
+        .s(sub_mux_out)
+    );
+    twiddle_factor_generator #(.N(N), .D(D)) tfg(
+        .tf_in(twiddle_factor), 
+        .tf_in_inv(inverse_twiddle_factor), 
+        .inv(inv), 
+        .stage(count_q), 
+        .tf(tf)
+    );
+    mux_2x1 #(.N(1)) cntrl_mux(
+        .a(&count_q), 
+        .b(count_q == $clog2(D)), 
+        .sel(inv), 
+        .s(cntrl_out)
+    );
 
     genvar i, j;
     generate
@@ -62,12 +81,12 @@ module ntt_intt_pu_v2 #(parameter N = 17, D = 16, NINV=61441) (
             .d(msdff_in), 
             .q(reg_out[i])
             );
-        demux #(.N(N), .S($clog2(D))) dem(
+        demux #(.N(N), .S(5)) dem(
             .a(reg_out[i]), 
             .sel(count_q), 
             .s(demux_out)
             );
-        ntt_intt_pe_cell_v2 #(.N(N)) pe(
+        ntt_intt_pe_cell_v2 #(.N(N), .NINV(NINV)) pe(
             .a(reg_out[i]), 
             .b(pe_b[i]), 
             .tf(tf[N*(i+1)-1:N*i]),
@@ -76,10 +95,10 @@ module ntt_intt_pu_v2 #(parameter N = 17, D = 16, NINV=61441) (
             .p(reg_in[i])
             );
             
-        assign an_temp[N*(i+1)-1:N*i] = reg_in[i];
+        assign an[N*(i+1)-1:N*i] = reg_in[i];
     end
     endgenerate
 
-    point_mod_mult_v2 #(.N(N), .D(D)) mul(.a(an_temp), .b(inv ? {D{NINV[N-1:0]}} : {D{{(N-1){1'B0}}, 1'B1}}), .p(an));
+    // point_mod_mult_v2 #(.N(N), .D(D)) mul(.a(an_temp), .b(inv ? {D{NINV[N-1:0]}} : {D{{(N-1){1'B0}}, 1'B1}}), .p(an));
 
 endmodule
