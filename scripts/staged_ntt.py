@@ -4,7 +4,7 @@ from helper import ParamGen
 from ntt_utils import clog2, clog, get_element_by_indexes, set_element_by_indexes, bit_reverse_int
 
 
-D = 64
+D = 1024
 K = 2
 N = 17
 
@@ -98,6 +98,9 @@ def staged_ntt(a, D, K, Q, PSI):
         
 if __name__ == "__main__":
     Q, PSI, psiv, w, wv = ParamGen(D, N)
+    print(Q, PSI)
+    Q = 65537
+    PSI = 33
 
     inp = [1 for i in range(D)]
     ntt1 = ntt(inp, Q, psi=PSI)
@@ -110,4 +113,6 @@ if __name__ == "__main__":
 
     print(intt(ntt1, Q, psi=PSI))
     print(intt(ntt2, Q, psi=PSI))
-    print(negacyclic_conv(inp, inp, Q))
+    print(intt(ntt1, Q, psi=PSI) == intt(ntt2, Q, psi=PSI))
+    print(intt(ntt1, Q, psi=PSI) == negacyclic_conv(inp, inp, Q))
+    # print(negacyclic_conv(inp, inp, Q))

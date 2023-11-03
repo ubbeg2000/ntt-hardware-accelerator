@@ -33,7 +33,7 @@ if PD == 1:
     wv = modinv(w, q)
 else:
     # Enter proper parameters below
-    t, n, logq = 8, 32, 17
+    t, n, logq = 8, 1024, 17
     # t, n, logq = 30, 1024, 17
     # t, n, logq = 256, 2048, 37
     # t, n, logq = 1024, 4096, 58
@@ -97,16 +97,16 @@ m1 = Poly(n, q, np=qnp)
 m1.randomize(1, type=2)
 m2 = Poly(n, q, np=qnp)
 m2.randomize(1, type=2)
-print(qnp)
+# print(qnp)
 x = m1 * m2
-print("HIHI", x.toPOL())
+# print("HIHI", x.toPOL())
 
 # print("* m1(x): {}".format(m1))
 # print("* m2(x): {}".format(m2))
 # print("")
 
 # # Encrypt message
-# ct1 = Evaluator.Encryption(m1)
+ct1 = Evaluator.Encryption(m1)
 # ct2 = Evaluator.Encryption(m2)
 
 # print("--- m1 and m2 are encrypted as ct1 and ct2.")
@@ -118,7 +118,10 @@ print("HIHI", x.toPOL())
 
 # # Homomorphic Addition
 # ct = Evaluator.HomomorphicAddition(ct1, ct2)
-# mt = Evaluator.Decryption(ct)
+mt = Evaluator.Decryption(ct1)
+
+print("ASDF", m1)
+print("ASDF", mt)
 
 # nr = Evaluator.IntDecode(mt)
 # ne = (n1+n2)

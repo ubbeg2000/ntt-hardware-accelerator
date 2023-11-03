@@ -18,8 +18,17 @@ def find_nth_root_of_unity_mod_q(n, q):
 
 def find_2nth_rou(q, n):
     for i in range(2, q):
-        if pow(i, 2*n, q) == 1 and gcd(i, q) == 1:
+        print(i)
+        ok = True
+        for j in range(1, 2*n+1):
+            if pow(i, j, q) == 1 and j != 2*n:
+                ok = False
+
+        if ok and pow(i, 2*n, q) == 1:
             return i
+            
+        # if pow(i, 2*n, q) == 1 and gcd(i, q) == 1:
+        #     return i
 
     return None
 
@@ -80,21 +89,34 @@ def intt(a, q, psi=0, print_step=False):
     return res
 
 if __name__ == "__main__":
-    N = 16
+    # 120833 55739
+    N = 1024
+    Q = 65537
+    psi = find_2nth_rou(Q, N)
     # print(gen_w_table(257, 8))
     # print(gen_w_inv_table(257, 8))
-    print(gen_w_table(65537, N))
-    print(gen_w_inv_table(65537, N))
+    # print(gen_w_table(65537, N))
+    # print(gen_w_inv_table(65537, N))
     # print(ntt([1  for i in range(32)]))
-    inp = [randint(0, 65536) for i in range(N)]
-    a = ntt(inp, 65537)
-    b = ntt(inp, 65537)
-    c = [((a[i] * b[i]) % 65537) for i in range(N)]
-    ar = intt(a, 65537)
-    print(a, inp == ar)
-    print(ar)
-    print(b)
-    print(intt(c, 65537))
+    print(find_2nth_rou(Q, N))
+    # inp_1 = [1 for i in range(N)]
+    # inp_2 = [1 for i in range(N)]
+
+    # a = [pow(e * e, 1, Q) for e in ntt(inp_1, Q, psi=psi)]
+    # b = [pow(e * e, 1, 65537) for e in ntt(inp_1, 65537, psi=find_2nth_rou(65537, N))]
+    # # print(a)
+    # print(intt(a, Q, psi=psi))
+    # # print(b)
+    # print(intt(b, 65537, psi=find_2nth_rou(65537, N)))
+    # # print(intt(b, 65537, psi=psi) == intt(a, Q, psi=psi))
+    # print(find_2nth_rou(Q, N))
+    # print(find_2nth_rou(65537, N))
+    # c = [((a[i] * b[i]) % 65537) for i in range(N)]
+    # ar = intt(a, 65537)
+    # print(a, inp == ar)
+    # print(ar)
+    # print(b)
+    # print(intt(c, 65537))
     # print("ASDF")
     # print(intt(a, 257))
     # print(intt(a, 65537))
