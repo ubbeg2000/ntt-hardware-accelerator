@@ -18,7 +18,6 @@ def find_nth_root_of_unity_mod_q(n, q):
 
 def find_2nth_rou(q, n):
     for i in range(2, q):
-        print(i)
         ok = True
         for j in range(1, 2*n+1):
             if pow(i, j, q) == 1 and j != 2*n:
@@ -26,9 +25,27 @@ def find_2nth_rou(q, n):
 
         if ok and pow(i, 2*n, q) == 1:
             return i
-            
-        # if pow(i, 2*n, q) == 1 and gcd(i, q) == 1:
-        #     return i
+
+    return None
+
+def is_power_of_two(num):
+    return bin(num).count('1') == 1
+
+def find_2nth_rous(q, n):
+    for i in range(2, n):
+        ok = True
+        for j in range(1, 2*n+1):
+            if pow(i, j, q) == 1 and j != 2*n:
+                ok = False
+
+        if ok and pow(i, 2*n, q) == 1:
+            num = pow(i, n//2, q)
+            num1 = pow(i, n//4, q)
+            num2 = pow(i, n//8, q)
+            num3 = pow(i, n//16, q)
+            if is_power_of_two(num) and is_power_of_two(num1):
+                print(num, num1, num2, num3)
+                print(i)
 
     return None
 
@@ -90,15 +107,19 @@ def intt(a, q, psi=0, print_step=False):
 
 if __name__ == "__main__":
     # 120833 55739
-    N = 1024
+    N = 16
     Q = 65537
     psi = find_2nth_rou(Q, N)
+    print("PSI", psi)
     # print(gen_w_table(257, 8))
     # print(gen_w_inv_table(257, 8))
     # print(gen_w_table(65537, N))
     # print(gen_w_inv_table(65537, N))
     # print(ntt([1  for i in range(32)]))
-    print(find_2nth_rou(Q, N))
+    # find_2nth_rous(Q, N)
+    x = ntt([1 for i in range(N)], Q, psi=psi)
+    print(x)
+    print(intt(x, Q, psi=psi))
     # inp_1 = [1 for i in range(N)]
     # inp_2 = [1 for i in range(N)]
 
