@@ -149,7 +149,7 @@ def r8nttopt(a):
 
     return an
 
-def r8intt(a):
+def r8inttopt(a):
     an = [0 for i in range(N)]
     for p in range(N//8):
         accum_8p = 0
@@ -172,66 +172,27 @@ def r8intt(a):
             tf_8p_7 = pow(PSI, -(2*i+1)*(8*p+7), Q)
 
             a0a4p, a0a4n = a[i] + a[i + N//2], a[i] - a[i + N//2]
-            a2a6p, a2a6n = a[i + 2*N//8] + a[i + 6*N//8], a[i + 2*N//8] - a[i + 6*N//8] * pow(PSI, N//2, Q)
+            a2a6p, a2a6n = a[i + 2*N//8] + a[i + 6*N//8], (a[i + 2*N//8] - a[i + 6*N//8]) * pow(PSI, N//2, Q)
             a1a5p, a1a5n = a[i + 1*N//8] + a[i + 5*N//8], a[i + 1*N//8] - a[i + 5*N//8]
             a3a7p, a3a7n = a[i + 3*N//8] + a[i + 7*N//8], a[i + 3*N//8] - a[i + 7*N//8]
 
-            accum_8p = accum_8p + tf_8p * (
-                a0a4p + a2a6p +
-                a1a5p + a3a7p
-            )
+            a0a4pa2a6pp, a0a4pa2a6pn = a0a4p + a2a6p, a0a4p - a2a6p
+            a0a4na2a6np, a0a4na2a6nn = a0a4n + a2a6n, a0a4n - a2a6n
 
-            accum_8p_1 = accum_8p_1 + tf_8p_1 * (
-                a0a4n - a2a6n
-                - pow(PSI, N//4, Q) * (
-                    a1a5n * pow(PSI, N//2, Q) + a3a7n
-                )
-            )
+            a1a5pa3a7pp = a1a5p + a3a7p
+            a1a5pa3a7pn = (a1a5p - a3a7p) * pow(PSI, N//2, Q)
+            a1a5na3a7nn = (a1a5n - pow(PSI, N//2, Q) * a3a7n) * pow(PSI, 3*N//4, Q)
+            a1a5na3a7np = (a1a5n + pow(PSI, N//2, Q) * a3a7n) * pow(PSI, N//4, Q)
 
-            accum_8p_2 = accum_8p_2 + tf_8p_2 * (
-                a0a4p - a2a6p
-                - pow(PSI, N//2, Q) * (
-                    (a1a5p) -
-                    (a3a7p)
-                )
-            )
+            accum_8p += tf_8p * (a0a4pa2a6pp + a1a5pa3a7pp)
+            accum_8p_1 += tf_8p_1 * (a0a4na2a6nn - a1a5na3a7nn)
+            accum_8p_2 += tf_8p_2 * (a0a4pa2a6pn - a1a5pa3a7pn)
+            accum_8p_3 += tf_8p_3 * (a0a4na2a6np - a1a5na3a7np)
+            accum_8p_4 += tf_8p_4 * (a0a4pa2a6pp - a1a5pa3a7pp)
+            accum_8p_5 += tf_8p_5 * (a0a4na2a6nn + a1a5na3a7nn)
+            accum_8p_6 += tf_8p_6 * (a0a4pa2a6pn + a1a5pa3a7pn)
+            accum_8p_7 += tf_8p_7 * (a0a4na2a6np + a1a5na3a7np)   
 
-            accum_8p_3 = accum_8p_3 + tf_8p_3 * (
-                a0a4n + a2a6n
-                - pow(PSI, N//4, Q) * (
-                    a1a5n + pow(PSI, N//2, Q) * a3a7n
-                )
-            )
-
-            accum_8p_4 = accum_8p_4 + tf_8p_4 * (
-                a0a4p + a2a6p
-                - (a1a5p + a3a7p)
-            )
-
-            accum_8p_5 = accum_8p_5 + tf_8p_5 * (
-                a0a4n - a2a6n
-                + pow(PSI, N//4, Q) * (
-                    pow(PSI, N//2, Q) * (a1a5n) +
-                    (a3a7n)
-                )
-            )
-
-            accum_8p_6 = accum_8p_6 + tf_8p_6 * (
-                a0a4p - a2a6p
-                + pow(PSI, N//2, Q) * (
-                    (a1a5p) -
-                    (a3a7p)
-                )
-            )
-
-            accum_8p_7 = accum_8p_7 + tf_8p_7 * (
-                a0a4n + a2a6n
-                + pow(PSI, N//4, Q) * (
-                    (a1a5n) + 
-                    (a3a7n) * pow(PSI, N//2, Q)
-                )
-            )
-        
         an[8*p+0] = (accum_8p * pow(N, -1, Q)) % Q
         an[8*p+1] = (accum_8p_1 * pow(N, -1, Q)) % Q
         an[8*p+2] = (accum_8p_2 * pow(N, -1, Q)) % Q
@@ -243,7 +204,7 @@ def r8intt(a):
 
     return an
 
-def r8inttopt(a):
+def r8intt(a):
     an = [0 for i in range(N)]
     for p in range(N//8):
         accum_8p = 0
@@ -352,5 +313,5 @@ def r8inttopt(a):
 # print(r4nttopt([1 for i in range(N)]))
 # print(intt(ntt([1 for i in range(N)], Q, psi=PSI), Q, psi=PSI))
 print(r8ntt([i for i in range(N)]))
-print(r8intt(r8nttopt([i for i in range(N)])))
+print(r8intt(r8ntt([i for i in range(N)])))
 # print(intt(ntt([1 for i in range(N)])))
