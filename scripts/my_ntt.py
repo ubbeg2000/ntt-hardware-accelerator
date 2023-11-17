@@ -43,9 +43,11 @@ def find_2nth_rous(q, n):
             num1 = pow(i, n//4, q)
             num2 = pow(i, n//8, q)
             num3 = pow(i, n//16, q)
-            if is_power_of_two(num) and is_power_of_two(num1):
+            if is_power_of_two(num):
                 print(num, num1, num2, num3)
                 print(i)
+
+                return i
 
     return None
 
@@ -107,9 +109,9 @@ def intt(a, q, psi=0, print_step=False):
 
 if __name__ == "__main__":
     # 120833 55739
-    N = 16
-    Q = 65537
-    psi = find_2nth_rou(Q, N)
+    N = 4
+    Q = 17
+    psi = find_2nth_rous(Q, N)
     print("PSI", psi)
     # print(gen_w_table(257, 8))
     # print(gen_w_inv_table(257, 8))

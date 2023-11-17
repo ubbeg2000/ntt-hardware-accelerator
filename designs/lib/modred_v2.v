@@ -48,6 +48,6 @@ module modred_v2 #(parameter LOGQ = 17) (
         .s(s_temp)
     );
 
-    assign s = s_temp[LOGQ-1:0];
+    assign s = s_temp;
     
 endmodule
