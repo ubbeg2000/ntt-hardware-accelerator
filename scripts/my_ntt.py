@@ -109,9 +109,9 @@ def intt(a, q, psi=0, print_step=False):
 
 if __name__ == "__main__":
     # 120833 55739
-    N = 4
-    Q = 17
-    psi = find_2nth_rous(Q, N)
+    N = 64
+    Q = 65537
+    psi = find_2nth_rou(Q, N)
     print("PSI", psi)
     # print(gen_w_table(257, 8))
     # print(gen_w_inv_table(257, 8))

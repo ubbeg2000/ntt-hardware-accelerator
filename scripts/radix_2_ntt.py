@@ -1,10 +1,10 @@
-from my_ntt import ntt, intt
+from my_ntt import ntt, intt, find_2nth_rou
 
-N = 16
+N = 4096
 Q = 65537
-PSI = 33
+PSI = find_2nth_rou(Q, N)
 
-def r2ntt(a):
+def r2ntt(a, N = N, Q = Q, PSI = find_2nth_rou(Q, N)):
     an = [0 for i in range(N)]
     for p in range(N//2):
         accum_2p = 0
@@ -59,9 +59,9 @@ def r2intt(a):
     return an
 
 # print([1 for i in range(N)])
-print(ntt([i for i in range(N)], Q, psi=PSI))
+# print(ntt([i for i in range(N)], Q, psi=PSI))
 # print(intt(ntt([i for i in range(N)], Q, psi=PSI), Q, psi=PSI))
-print(r2ntt_v2([i for i in range(N)]))
-print(r2ntt([i for i in range(N)]))
-print(r2intt(r2ntt([i for i in range(N)])))
+# print(r2ntt_v2([i for i in range(N)]))
+# print(r2ntt([i for i in range(N)]))
+# print(r2intt(r2ntt([i for i in range(N)])))
 # print(intt(ntt([1 for i in range(N)])))

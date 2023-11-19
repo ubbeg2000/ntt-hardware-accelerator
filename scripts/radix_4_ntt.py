@@ -2,7 +2,7 @@ from my_ntt import ntt, intt
 
 N = 1024
 Q = 65537
-PSI = 649
+PSI = 33
 
 def r4ntt(a):
     an = [0 for i in range(N)]
@@ -116,8 +116,8 @@ def r4intt(a):
     return an
 
 # print([1 for i in range(N)])
-print(ntt([1 for i in range(N)], Q, psi=PSI))
+# print(ntt([1 for i in range(N)], Q, psi=PSI))
 # print(intt(ntt([1 for i in range(N)], Q, psi=PSI), Q, psi=PSI))
-print(r4ntt([1 for i in range(N)]))
-print(r4intt(r4nttopt([i for i in range(N)])))
+# print(r4ntt([1 for i in range(N)]))
+# print(r4intt(r4nttopt([i for i in range(N)])))
 # print(intt(ntt([1 for i in range(N)])))

@@ -32,7 +32,6 @@ def NTT(A, W_table, q):
                 B[s] = (as_temp + at_temp) % q
                 B[t] = ((as_temp - at_temp) * w) % q
 
-    print("DORR", B)
     B = indexReverse(B, v)
     return B
 
