@@ -30,19 +30,19 @@ module adder #(parameter N = 2) (
     output cout
     );
     
-    // wire cwire[N-2:0];
+    wire cwire[N-2:0];
     
-    // genvar i;
+    genvar i;
     
-    // generate
-    // for (i = 0; i < N; i = i + 1) begin
-    //     if (i == 0)
-    //         full_adder fa(.a(a[i]), .b(b[i]), .cin(cin), .s(s[i]), .cout(cwire[i]));
-    //     else if (i == N - 1)
-    //         full_adder fa(.a(a[i]), .b(b[i]), .cin(cwire[i - 1]), .s(s[i]), .cout(cout));
-    //     else
-    //         full_adder fa(.a(a[i]), .b(b[i]), .cin(cwire[i - 1]), .s(s[i]), .cout(cwire[i]));
-    // end
-    // endgenerate
-    assign {cout, s} = a + b + {{(N-1){1'B0}}, cin};
+    generate
+    for (i = 0; i < N; i = i + 1) begin
+        if (i == 0)
+            full_adder fa(.a(a[i]), .b(b[i]), .cin(cin), .s(s[i]), .cout(cwire[i]));
+        else if (i == N - 1)
+            full_adder fa(.a(a[i]), .b(b[i]), .cin(cwire[i - 1]), .s(s[i]), .cout(cout));
+        else
+            full_adder fa(.a(a[i]), .b(b[i]), .cin(cwire[i - 1]), .s(s[i]), .cout(cwire[i]));
+    end
+    endgenerate
+    // assign {cout, s} = a + b + {{(N-1){1'B0}}, cin};
 endmodule

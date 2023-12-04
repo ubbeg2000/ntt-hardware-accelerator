@@ -1,10 +1,10 @@
-from my_ntt import ntt, intt
+from my_ntt import ntt, intt, find_2nth_rou
 
 N = 1024
 Q = 65537
 PSI = 33
 
-def r4ntt(a):
+def r4ntt(a, N = N, Q = Q, PSI = find_2nth_rou(Q, N)):
     an = [0 for i in range(N)]
     for k in range(N):
         accum = 0
