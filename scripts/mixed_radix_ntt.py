@@ -2,7 +2,7 @@ from radix_4_ntt import r4ntt
 from radix_2_ntt import r2ntt
 from my_ntt import ntt, find_2nth_rou
 
-N = 512
+N = 256
 Q = 65537
 PSI = find_2nth_rou(Q, N)
 
@@ -139,6 +139,24 @@ def rec8ntt(a, N = N, Q = Q, PSI = find_2nth_rou(Q, N)):
         return y
     
 def rec16ntt(a, N = N, Q = Q, PSI = find_2nth_rou(Q, N)):
+    psi_n_2 = pow(PSI, N//2, Q)
+    psi_n_4 = pow(PSI, N//4, Q)
+    psi_n_8 = pow(PSI, N//8, Q)
+
+    n_4_shift_1 = pow(psi_n_4, 1, Q)
+    n_4_shift_2 = pow(psi_n_4, 2, Q)
+    n_4_shift_3 = pow(psi_n_4, 3, Q)
+
+    n_2_shift_1 = pow(psi_n_2, 1, Q)
+
+    n_8_shift_1 = pow(psi_n_8, 1, Q)
+    n_8_shift_2 = pow(psi_n_8, 2, Q)
+    n_8_shift_3 = pow(psi_n_8, 3, Q)
+    n_8_shift_4 = pow(psi_n_8, 4, Q)
+    n_8_shift_5 = pow(psi_n_8, 5, Q)
+    n_8_shift_6 = pow(psi_n_8, 6, Q)
+    n_8_shift_7 = pow(psi_n_8, 7, Q)
+    
     n = len(a)
     if n == 1:
         return a
@@ -183,94 +201,135 @@ def rec16ntt(a, N = N, Q = Q, PSI = find_2nth_rou(Q, N)):
         y = [0 for i in range(n)]
         for i in range(n//16):
             tf = pow(psi, (2*i+1), Q)
-            tf_2 = pow(psi, 2*(2*i+1), Q)
-            tf_4 = pow(psi, 4*(2*i+1), Q)
-            tf_8 = pow(psi, 8*(2*i+1), Q)
 
-            tf_shift_1 = tf * pow(PSI, 1*N//4, Q)
-            tf_shift_2 = tf * pow(PSI, 2*N//4, Q)
-            tf_shift_3 = tf * pow(PSI, 3*N//4, Q)
-            
-            tf_2_shift = tf_2 * pow(PSI, N//2, Q)
+            y_16p_0_v = y_16p_0[i] * pow(tf, 0, Q)
+            y_16p_1_v = y_16p_1[i] * pow(tf, 1, Q)
+            y_16p_2_v = y_16p_2[i] * pow(tf, 2, Q)
+            y_16p_3_v = y_16p_3[i] * pow(tf, 3, Q)
+            y_16p_3_v = y_16p_3[i] * pow(tf, 3, Q)
+            y_16p_4_v = y_16p_4[i] * pow(tf, 4, Q)
+            y_16p_5_v = y_16p_5[i] * pow(tf, 5, Q)
+            y_16p_6_v = y_16p_6[i] * pow(tf, 6, Q)
+            y_16p_7_v = y_16p_7[i] * pow(tf, 7, Q)
+            y_16p_8_v = y_16p_8[i] * pow(tf, 8, Q)
+            y_16p_9_v = y_16p_9[i] * pow(tf, 9, Q)
+            y_16p_10_v = y_16p_10[i] * pow(tf, 10, Q)
+            y_16p_11_v = y_16p_11[i] * pow(tf, 11, Q)
+            y_16p_12_v = y_16p_12[i] * pow(tf, 12, Q)
+            y_16p_13_v = y_16p_13[i] * pow(tf, 13, Q)
+            y_16p_14_v = y_16p_14[i] * pow(tf, 14, Q)
+            y_16p_15_v = y_16p_15[i] * pow(tf, 15, Q)
             
             y[i+0*n//16] = (
-                (y_16p_0[i] + tf_4 * y_16p_8[i] + tf_2 * (y_16p_2[i] + tf_4 * y_16p_10[i])) + 
-                tf * (y_16p_1[i] + tf_4 * y_16p_5[i] + tf_2 * (y_16p_3[i] + tf_4 * y_16p_7[i]))
+                (y_16p_0_v + y_16p_8_v + (y_16p_4_v + y_16p_12_v)) + 
+                (y_16p_2_v + y_16p_10_v + (y_16p_6_v + y_16p_14_v)) + 
+                ((y_16p_1_v + y_16p_9_v + (y_16p_5_v + y_16p_13_v)) + 
+                (y_16p_3_v + y_16p_11_v + (y_16p_7_v + y_16p_15_v)))
             ) % Q
 
             y[i+1*n//16] = (
-                (y_16p_0[i] - tf_4 * y_16p_4[i] + tf_2_shift * (y_16p_2[i] - tf_4 * y_16p_6[i])) + 
-                tf_shift_1 * (y_16p_1[i] - tf_4 * y_16p_5[i] + tf_2_shift * (y_16p_3[i] - tf_4 * y_16p_7[i]))
+                (y_16p_0_v - y_16p_8_v + n_2_shift_1 * (y_16p_4_v - y_16p_12_v)) + 
+                n_4_shift_1 * (y_16p_2_v - y_16p_10_v + n_2_shift_1 * (y_16p_6_v - y_16p_14_v)) + 
+                n_8_shift_1 * ((y_16p_1_v - y_16p_9_v + n_2_shift_1 * (y_16p_5_v - y_16p_13_v)) + 
+                n_4_shift_1 * (y_16p_3_v - y_16p_11_v + n_2_shift_1 * (y_16p_7_v - y_16p_15_v)))
             ) % Q
 
             y[i+2*n//16] = (
-                (y_16p_0[i] + tf_4 * y_16p_4[i] - tf_2 * (y_16p_2[i] + tf_4 * y_16p_6[i])) + 
-                tf_shift_2 * (y_16p_1[i] + tf_4 * y_16p_5[i] - tf_2 * (y_16p_3[i] + tf_4 * y_16p_7[i]))
+                (y_16p_0_v + y_16p_8_v - (y_16p_4_v + y_16p_12_v)) + 
+                n_4_shift_2 * (y_16p_2_v + y_16p_10_v - (y_16p_6_v + y_16p_14_v)) + 
+                n_8_shift_2 * ((y_16p_1_v + y_16p_9_v - (y_16p_5_v + y_16p_13_v)) + 
+                n_4_shift_2 * (y_16p_3_v + y_16p_11_v - (y_16p_7_v + y_16p_15_v)))
             ) % Q
 
             y[i+3*n//16] = (
-                (y_16p_0[i] - tf_4 * y_16p_4[i] - tf_2_shift * (y_16p_2[i] - tf_4 * y_16p_6[i])) + 
-                tf_shift_3 * (y_16p_1[i] - tf_4 * y_16p_5[i] - tf_2_shift * (y_16p_3[i] - tf_4 * y_16p_7[i]))
+                (y_16p_0_v - y_16p_8_v - n_2_shift_1 * (y_16p_4_v - y_16p_12_v)) + 
+                n_4_shift_3 * (y_16p_2_v - y_16p_10_v - n_2_shift_1 * (y_16p_6_v - y_16p_14_v)) + 
+                n_8_shift_3 * ((y_16p_1_v - y_16p_9_v - n_2_shift_1 * (y_16p_5_v - y_16p_13_v)) + 
+                n_4_shift_3 * (y_16p_3_v - y_16p_11_v - n_2_shift_1 * (y_16p_7_v - y_16p_15_v)))
             ) % Q
 
             y[i+4*n//16] = (
-                (y_16p_0[i] + tf_4 * y_16p_4[i] + tf_2 * (y_16p_2[i] + tf_4 * y_16p_6[i])) - 
-                tf * (y_16p_1[i] + tf_4 * y_16p_5[i] + tf_2 * (y_16p_3[i] + tf_4 * y_16p_7[i]))
+                (y_16p_0_v + y_16p_8_v + (y_16p_4_v + y_16p_12_v)) - 
+                (y_16p_2_v + y_16p_10_v + (y_16p_6_v + y_16p_14_v)) + 
+                n_8_shift_4 * ((y_16p_1_v + y_16p_9_v + (y_16p_5_v + y_16p_13_v)) - 
+                (y_16p_3_v + y_16p_11_v + (y_16p_7_v + y_16p_15_v)))
             ) % Q
 
             y[i+5*n//16] = (
-                (y_16p_0[i] - tf_4 * y_16p_4[i] + tf_2_shift * (y_16p_2[i] - tf_4 * y_16p_6[i])) - 
-                tf_shift_1 * (y_16p_1[i] - tf_4 * y_16p_5[i] + tf_2_shift * (y_16p_3[i] - tf_4 * y_16p_7[i]))
+                (y_16p_0_v - y_16p_8_v + n_2_shift_1 * (y_16p_4_v - y_16p_12_v)) - 
+                n_4_shift_1 * (y_16p_2_v - y_16p_10_v + n_2_shift_1 * (y_16p_6_v - y_16p_14_v)) + 
+                n_8_shift_5 * ((y_16p_1_v - y_16p_9_v + n_2_shift_1 * (y_16p_5_v - y_16p_13_v)) - 
+                n_4_shift_1 * (y_16p_3_v - y_16p_11_v + n_2_shift_1 * (y_16p_7_v - y_16p_15_v)))
             ) % Q
 
             y[i+6*n//16] = (
-                (y_16p_0[i] + tf_4 * y_16p_4[i] - tf_2 * (y_16p_2[i] + tf_4 * y_16p_6[i])) - 
-                tf_shift_2 * (y_16p_1[i] + tf_4 * y_16p_5[i] - tf_2 * (y_16p_3[i] + tf_4 * y_16p_7[i]))
+                (y_16p_0_v + y_16p_8_v - (y_16p_4_v + y_16p_12_v)) - 
+                n_4_shift_2 * (y_16p_2_v + y_16p_10_v - (y_16p_6_v + y_16p_14_v)) + 
+                n_8_shift_6 * ((y_16p_1_v + y_16p_9_v - (y_16p_5_v + y_16p_13_v)) - 
+                n_4_shift_2 * (y_16p_3_v + y_16p_11_v - (y_16p_7_v + y_16p_15_v)))
             ) % Q
 
             y[i+7*n//16] = (
-                (y_16p_0[i] - tf_4 * y_16p_4[i] - tf_2_shift * (y_16p_2[i] - tf_4 * y_16p_6[i])) - 
-                tf_shift_3 * (y_16p_1[i] - tf_4 * y_16p_5[i] - tf_2_shift * (y_16p_3[i] - tf_4 * y_16p_7[i]))
+                (y_16p_0_v - y_16p_8_v - n_2_shift_1 * (y_16p_4_v - y_16p_12_v)) - 
+                n_4_shift_3 * (y_16p_2_v - y_16p_10_v - n_2_shift_1 * (y_16p_6_v - y_16p_14_v)) + 
+                n_8_shift_7 * ((y_16p_1_v - y_16p_9_v - n_2_shift_1 * (y_16p_5_v - y_16p_13_v)) -
+                n_4_shift_3 * (y_16p_3_v - y_16p_11_v - n_2_shift_1 * (y_16p_7_v - y_16p_15_v)))
             ) % Q
 
             y[i+8*n//16] = (
-                (y_16p_0[i] + tf_4 * y_16p_4[i] + tf_2 * (y_16p_2[i] + tf_4 * y_16p_6[i])) + 
-                tf * (y_16p_1[i] + tf_4 * y_16p_5[i] + tf_2 * (y_16p_3[i] + tf_4 * y_16p_7[i]))
+                (y_16p_0_v + y_16p_8_v + (y_16p_4_v + y_16p_12_v)) + 
+                (y_16p_2_v + y_16p_10_v + (y_16p_6_v + y_16p_14_v)) - 
+                ((y_16p_1_v + y_16p_9_v + (y_16p_5_v + y_16p_13_v)) + 
+                (y_16p_3_v + y_16p_11_v + (y_16p_7_v + y_16p_15_v)))
             ) % Q
 
             y[i+9*n//16] = (
-                (y_16p_0[i] - tf_4 * y_16p_4[i] + tf_2_shift * (y_16p_2[i] - tf_4 * y_16p_6[i])) + 
-                tf_shift_1 * (y_16p_1[i] - tf_4 * y_16p_5[i] + tf_2_shift * (y_16p_3[i] - tf_4 * y_16p_7[i]))
+                (y_16p_0_v - y_16p_8_v + n_2_shift_1 * (y_16p_4_v - y_16p_12_v)) + 
+                n_4_shift_1 * (y_16p_2_v - y_16p_10_v + n_2_shift_1 * (y_16p_6_v - y_16p_14_v)) - 
+                n_8_shift_1 * ((y_16p_1_v - y_16p_9_v + n_2_shift_1 * (y_16p_5_v - y_16p_13_v)) + 
+                n_4_shift_1 * (y_16p_3_v - y_16p_11_v + n_2_shift_1 * (y_16p_7_v - y_16p_15_v)))
             ) % Q
 
             y[i+10*n//16] = (
-                (y_16p_0[i] + tf_4 * y_16p_4[i] - tf_2 * (y_16p_2[i] + tf_4 * y_16p_6[i])) + 
-                tf_shift_2 * (y_16p_1[i] + tf_4 * y_16p_5[i] - tf_2 * (y_16p_3[i] + tf_4 * y_16p_7[i]))
+                (y_16p_0_v + y_16p_8_v - (y_16p_4_v + y_16p_12_v)) + 
+                n_4_shift_2 * (y_16p_2_v + y_16p_10_v - (y_16p_6_v + y_16p_14_v)) - 
+                n_8_shift_2 * ((y_16p_1_v + y_16p_9_v - (y_16p_5_v + y_16p_13_v)) + 
+                n_4_shift_2 * (y_16p_3_v + y_16p_11_v - (y_16p_7_v + y_16p_15_v)))
             ) % Q
 
             y[i+11*n//16] = (
-                (y_16p_0[i] - tf_4 * y_16p_4[i] - tf_2_shift * (y_16p_2[i] - tf_4 * y_16p_6[i])) + 
-                tf_shift_3 * (y_16p_1[i] - tf_4 * y_16p_5[i] - tf_2_shift * (y_16p_3[i] - tf_4 * y_16p_7[i]))
+                (y_16p_0_v - y_16p_8_v - n_2_shift_1 * (y_16p_4_v - y_16p_12_v)) + 
+                n_4_shift_3 * (y_16p_2_v - y_16p_10_v - n_2_shift_1 * (y_16p_6_v - y_16p_14_v)) - 
+                n_8_shift_3 * ((y_16p_1_v - y_16p_9_v - n_2_shift_1 * (y_16p_5_v - y_16p_13_v)) + 
+                n_4_shift_3 * (y_16p_3_v - y_16p_11_v - n_2_shift_1 * (y_16p_7_v - y_16p_15_v)))
             ) % Q
 
             y[i+12*n//16] = (
-                (y_16p_0[i] + tf_4 * y_16p_4[i] + tf_2 * (y_16p_2[i] + tf_4 * y_16p_6[i])) - 
-                tf * (y_16p_1[i] + tf_4 * y_16p_5[i] + tf_2 * (y_16p_3[i] + tf_4 * y_16p_7[i]))
+                (y_16p_0_v + y_16p_8_v + (y_16p_4_v + y_16p_12_v)) - 
+                (y_16p_2_v + y_16p_10_v + (y_16p_6_v + y_16p_14_v)) - 
+                n_8_shift_4 * ((y_16p_1_v + y_16p_9_v + (y_16p_5_v + y_16p_13_v)) - 
+                (y_16p_3_v + y_16p_11_v + (y_16p_7_v + y_16p_15_v)))
             ) % Q
 
             y[i+13*n//16] = (
-                (y_16p_0[i] - tf_4 * y_16p_4[i] + tf_2_shift * (y_16p_2[i] - tf_4 * y_16p_6[i])) - 
-                tf_shift_1 * (y_16p_1[i] - tf_4 * y_16p_5[i] + tf_2_shift * (y_16p_3[i] - tf_4 * y_16p_7[i]))
+                (y_16p_0_v - y_16p_8_v + n_2_shift_1 * (y_16p_4_v - y_16p_12_v)) - 
+                n_4_shift_1 * (y_16p_2_v - y_16p_10_v + n_2_shift_1 * (y_16p_6_v - y_16p_14_v)) - 
+                n_8_shift_5 * ((y_16p_1_v - y_16p_9_v + n_2_shift_1 * (y_16p_5_v - y_16p_13_v)) - 
+                n_4_shift_1 * (y_16p_3_v - y_16p_11_v + n_2_shift_1 * (y_16p_7_v - y_16p_15_v)))
             ) % Q
 
             y[i+14*n//16] = (
-                (y_16p_0[i] + tf_4 * y_16p_4[i] - tf_2 * (y_16p_2[i] + tf_4 * y_16p_6[i])) - 
-                tf_shift_2 * (y_16p_1[i] + tf_4 * y_16p_5[i] - tf_2 * (y_16p_3[i] + tf_4 * y_16p_7[i]))
+                (y_16p_0_v + y_16p_8_v - (y_16p_4_v + y_16p_12_v)) - 
+                n_4_shift_2 * (y_16p_2_v + y_16p_10_v - (y_16p_6_v + y_16p_14_v)) - 
+                n_8_shift_6 * ((y_16p_1_v + y_16p_9_v - (y_16p_5_v + y_16p_13_v)) - 
+                n_4_shift_2 * (y_16p_3_v + y_16p_11_v - (y_16p_7_v + y_16p_15_v)))
             ) % Q
 
             y[i+15*n//16] = (
-                (y_16p_0[i] - tf_4 * y_16p_4[i] - tf_2_shift * (y_16p_2[i] - tf_4 * y_16p_6[i])) - 
-                tf_shift_3 * (y_16p_1[i] - tf_4 * y_16p_5[i] - tf_2_shift * (y_16p_3[i] - tf_4 * y_16p_7[i]))
+                (y_16p_0_v - y_16p_8_v - n_2_shift_1 * (y_16p_4_v - y_16p_12_v)) - 
+                n_4_shift_3 * (y_16p_2_v - y_16p_10_v - n_2_shift_1 * (y_16p_6_v - y_16p_14_v)) - 
+                n_8_shift_7 * ((y_16p_1_v - y_16p_9_v - n_2_shift_1 * (y_16p_5_v - y_16p_13_v)) - 
+                n_4_shift_3 * (y_16p_3_v - y_16p_11_v - n_2_shift_1 * (y_16p_7_v - y_16p_15_v)))
             ) % Q
 
         return y
@@ -543,8 +602,9 @@ def multirntt82(a, N = N, Q = Q, PSI = find_2nth_rou(Q, N)):
     else:
         return a
 
-# inp = [1 for i in range(N)]
-# print(find_2nth_rou(Q, N))
-# print(multirntt(inp, N = N, Q = Q, PSI = find_2nth_rou(Q, N)))
-# print(r2ntt(inp, N = N, Q = Q, PSI = find_2nth_rou(Q, N)))
-# print(multirntt(inp, N = N, Q = Q, PSI = find_2nth_rou(Q, N))==r2ntt(inp, N = N, Q = Q, PSI = find_2nth_rou(Q, N)))
+if __name__ == "__main__":
+    inp = [i for i in range(N)]
+    # print(find_2nth_rou(Q, N))
+    print(rec16ntt(inp, N = N, Q = Q, PSI = PSI))
+    print(r2ntt(inp, N = N, Q = Q, PSI = PSI))
+    print(multirntt(inp, N = N, Q = Q, PSI = PSI)==rec16ntt(inp, N = N, Q = Q, PSI = PSI))

@@ -1,4 +1,4 @@
-from mixed_radix_ntt import rec2ntt, rec4ntt, rec8ntt, multirntt, multirntt42, multirntt82
+from mixed_radix_ntt import rec2ntt, rec4ntt, rec8ntt, rec16ntt, multirntt, multirntt42, multirntt82
 from radix_2_ntt import r2ntt
 from radix_4_ntt import r4ntt
 from radix_8_ntt import r8ntt
@@ -59,6 +59,9 @@ testcases = [
     # Radix-8 Recursive NTT
     {"func": rec8ntt, "N": pow(2, 12), "Q": 65537},
     {"func": rec8ntt, "N": pow(2, 15), "Q": 65537},
+
+    # Radix-16 Recursive NTT
+    {"func":rec16ntt, "N": pow(2, 12), "Q": 65537},
 
     # Radix-2 NTT
     # {"func": r2ntt, "N": pow(2, 10), "Q": 65537},
