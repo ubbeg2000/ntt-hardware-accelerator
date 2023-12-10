@@ -51,6 +51,7 @@
 `include "designs/poly_mult_systolic_array.v"
 `include "designs/psi_inv_table.v"
 `include "designs/psi_table.v"
+`include "designs/radix_16_dit_ntt.v"
 `include "designs/radix_2_dif_ntt.v"
 `include "designs/radix_2_dit_ntt.v"
 `include "designs/radix_2_intt_pe.v"
