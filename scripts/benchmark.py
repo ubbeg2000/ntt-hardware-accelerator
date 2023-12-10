@@ -1,7 +1,4 @@
-from mixed_radix_ntt import rec2ntt, rec4ntt, rec8ntt, rec16ntt, multirntt, multirntt42, multirntt82
-from radix_2_ntt import r2ntt
-from radix_4_ntt import r4ntt
-from radix_8_ntt import r8ntt
+from mixed_radix_ntt import rec2ntt, rec4ntt, rec8ntt, rec16ntt, multirntt, multirntt42, multirntt82, multirntt162, multirntt1642, multirntt1682
 from my_ntt import find_2nth_rou
 import time
 
@@ -43,6 +40,30 @@ testcases = [
     {"func": multirntt82, "N": pow(2, 14), "Q": 65537},
     {"func": multirntt82, "N": pow(2, 15), "Q": 65537},
 
+    # Multi-Radix Recursive NTT 16 2
+    {"func": multirntt162, "N": pow(2, 10), "Q": 65537},
+    {"func": multirntt162, "N": pow(2, 11), "Q": 65537},
+    {"func": multirntt162, "N": pow(2, 12), "Q": 65537},
+    {"func": multirntt162, "N": pow(2, 13), "Q": 65537},
+    {"func": multirntt162, "N": pow(2, 14), "Q": 65537},
+    {"func": multirntt162, "N": pow(2, 15), "Q": 65537},
+
+    # Multi-Radix Recursive NTT 16 4 2
+    {"func": multirntt1642, "N": pow(2, 10), "Q": 65537},
+    {"func": multirntt1642, "N": pow(2, 11), "Q": 65537},
+    {"func": multirntt1642, "N": pow(2, 12), "Q": 65537},
+    {"func": multirntt1642, "N": pow(2, 13), "Q": 65537},
+    {"func": multirntt1642, "N": pow(2, 14), "Q": 65537},
+    {"func": multirntt1642, "N": pow(2, 15), "Q": 65537},
+
+    # Multi-Radix Recursive NTT 16 8 2
+    {"func": multirntt1682, "N": pow(2, 10), "Q": 65537},
+    {"func": multirntt1682, "N": pow(2, 11), "Q": 65537},
+    {"func": multirntt1682, "N": pow(2, 12), "Q": 65537},
+    {"func": multirntt1682, "N": pow(2, 13), "Q": 65537},
+    {"func": multirntt1682, "N": pow(2, 14), "Q": 65537},
+    {"func": multirntt1682, "N": pow(2, 15), "Q": 65537},
+
     # Radix-2 Recursive NTT
     {"func":rec2ntt, "N": pow(2, 10), "Q": 65537},
     {"func":rec2ntt, "N": pow(2, 11), "Q": 65537},
@@ -80,12 +101,12 @@ testcases = [
     # {"func": r4ntt, "N": pow(2, 15), "Q": 65537},
 
     # Radix-8 NTT
-    {"func": r8ntt, "N": pow(2, 10), "Q": 65537},
-    {"func": r8ntt, "N": pow(2, 11), "Q": 65537},
-    {"func": r8ntt, "N": pow(2, 12), "Q": 65537},
-    {"func": r8ntt, "N": pow(2, 13), "Q": 65537},
-    {"func": r8ntt, "N": pow(2, 14), "Q": 65537},
-    {"func": r8ntt, "N": pow(2, 15), "Q": 65537},
+    # {"func": r8ntt, "N": pow(2, 10), "Q": 65537},
+    # {"func": r8ntt, "N": pow(2, 11), "Q": 65537},
+    # {"func": r8ntt, "N": pow(2, 12), "Q": 65537},
+    # {"func": r8ntt, "N": pow(2, 13), "Q": 65537},
+    # {"func": r8ntt, "N": pow(2, 14), "Q": 65537},
+    # {"func": r8ntt, "N": pow(2, 15), "Q": 65537},
 ]
 
 for tc in testcases:
