@@ -1,7 +1,7 @@
 .DS_Store
 *.vcd
 .vscode
-simulations/
+simulations/*
 /psi_inv_table.v
 /psi_inv_table.v
 scripts/psi_table.v
