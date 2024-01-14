@@ -76,3 +76,6 @@ A few notable top level modules in this repo are:
 4. `radix_8_dit_ntt.v`, models the optimized Radix-8 NTT algorithm using $Q=2^{16}+1$
 5. `radix_16_dit_ntt.v`, models the optimized Radix-16 NTT algorithm using $Q=2^{16}+1$
 6. `modred_v2.v`, models the simplified modular reductor for $Q=2^{N}+1$
+
+## Credis
+* BFV implementation in Python : [https://github.com/acmert/bfv-python](https://github.com/acmert/bfv-python)
