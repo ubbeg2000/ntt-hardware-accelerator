@@ -45,11 +45,13 @@ def rec4ntt(a, N = N, Q = Q, PSI = find_2nth_rou(Q, N)):
         y_4p_3 = rec4ntt(a_4p_3)
 
         y = [0 for i in range(n)]
+
+        psi =  pow(PSI, N//n, Q)
+
         for i in range(n//4):
-            tf =  pow(PSI, N//n, Q)
-            tf_2p = pow(tf, (2*i+1), Q)
-            tf_3p = pow(tf, (2*i+1), Q) * pow(PSI, N//2, Q)
-            tf_2p_2 = pow(tf, 2*(2*i+1), Q)
+            tf_2p = pow(psi, (2*i+1), Q)
+            tf_3p = pow(psi, (2*i+1), Q) * pow(PSI, N//2, Q)
+            tf_2p_2 = pow(psi, 2*(2*i+1), Q)
             
             y[i+0*n//4] = (y_4p[i] + tf_2p_2 * y_4p_2[i] + tf_2p * (y_4p_1[i] + tf_2p_2 * y_4p_3[i])) % Q
             y[i+1*n//4] = (y_4p[i] - tf_2p_2 * y_4p_2[i] + tf_3p * (y_4p_1[i] - tf_2p_2 * y_4p_3[i])) % Q
